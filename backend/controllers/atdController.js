@@ -1,9 +1,15 @@
 import atdModel from "../models/AtdSchema.js";
 
 
+
+
 const atdController = async (req, res) => {
     const { date, isPresent } = req.body;
     try {
+
+        if (!date || !isPresent) {
+            return res.status(400).json({success:false,msg:"Data not found"})
+        }
         //check if user is already exit or not
         const user = await atdModel.findOne({ userId: req.user.id })
         if (!user) {
@@ -24,9 +30,11 @@ const atdController = async (req, res) => {
         }
 
         const dailyData = user.daily.find(a => a.date.toISOString().slice(0, 10) == date)
-        if (dailyData.periods >= 7) {
-            return res.json({success:false,msg:"You have marked all periods today"})
-        }
+        if (dailyData) {
+            if (dailyData.periods >= 7) {
+                return res.json({ success: false, msg: "You have marked all periods today" })
+            }
+         }
 
         if (!dailyData) {
 
@@ -47,6 +55,7 @@ const atdController = async (req, res) => {
 
         user.totalPeriods++;
         if (isPresent) {
+ 
             user.totalPresents++;
         }
        
@@ -69,4 +78,27 @@ const atdController = async (req, res) => {
 
 }
 
-export { atdController }
+const addPreviousDataController = async (req, res) => {
+    const {periods,presents} = req.body;
+    try {
+        const user = await atdModel.findOne({ userId: req.user.id })
+        
+        if (!presents || !periods <= 0) {
+            return res.status(400).json({success:false,msg:"Invalid input data"})
+        }
+            user.totalPeriods = periods;
+            user.totalPresents = presents;
+            user.result = parseFloat((user.totalPresents / user.totalPeriods) * 100).toFixed(2);
+        
+
+        await user.save();
+        res.status(200).json({success:true,msg:"Previous data added Successfully"})
+       
+    } catch (err) {
+        console.log("Error in addPreviousDataController", err);
+        res.status(500).json({msg:"Internal Server Error"})
+        
+    }
+}
+
+export { atdController,addPreviousDataController }
