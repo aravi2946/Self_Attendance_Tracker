@@ -156,7 +156,29 @@ const fetchTodayAtdController = async (req, res) => {
 
 
     } catch (err) {
-        console.log("Error in fetchAtdController", err);
+        console.log("Error in fetchTodayAtdController", err);
+        res.status(500).json({ msg: "Internal Server Error" })
+
+    }
+}
+
+const resetAtdDataController = async (req, res) => {
+    try {
+        await atdModel.updateOne(
+            { userId: req.user.id },
+            {
+                $set: {
+                    totalPeriods: 0,
+                    totalPresents: 0,
+                    result:0,
+                    daily:[]
+                }
+            }
+        
+        )
+        res.status(200).json({success:true,msg:"Reset Done Successfully"})
+    } catch (err) {
+        console.log("Error in resetAtdDataController", err);
         res.status(500).json({ msg: "Internal Server Error" })
 
     }
@@ -167,4 +189,4 @@ const fetchTodayAtdController = async (req, res) => {
 
 
 
-export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController }
+export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController,resetAtdDataController }
