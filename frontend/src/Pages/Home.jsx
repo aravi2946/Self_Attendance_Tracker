@@ -1,23 +1,27 @@
 import React from 'react'
 import Navbar from '../Components/Navbar'
+import Header from '../Components/header'
+import PrevAtd from '../Components/PrevAtd'
 
-const Home = () => {
+const Home = ({open,setOpen}) => {
   return (
+    <>
+     {open?<PrevAtd setOpen={setOpen}/>:<></>}
+    <div className="h-screen ">
+     
       <div>
+
           <Navbar />
-          
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium at quo quod eius in sapiente pariatur similique vitae. Voluptatem voluptatum perferendis quaerat enim amet sit repellendus, dolores asperiores quidem iusto!
+      </div>
+      <div className=''>
+
+          <Header setOpen={setOpen} />
+      </div>
       
+
+
     </div>
+    </>
   )
 }
 
