@@ -34,7 +34,7 @@ const Navbar = () => {
                       <p className='absolute -top-1 -right-1 bg-red-500 rounded-full text-sm text-white px-1.5'>1</p>
                   </div>
                   <div className='border py-2 px-4 rounded-lg bg-blue-400 text-white font-semibold cursor-pointer
-                  hover:bg-blue-500 transition-all md:py-3 md:px-7 md:text-[17px]'>
+                  hover:bg-blue-500 transition-all md:py-3 md:px-7 md:text-[17px] active:scale-90'>
                       <button className='cursor-pointer'>Sign In</button>
                   </div>
               </div>

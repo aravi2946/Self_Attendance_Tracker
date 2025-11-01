@@ -12,10 +12,10 @@ const PrevAtd = ({setOpen}) => {
                   <div className='flex gap-5 pt-3'>
                       <button className='cursor-pointer py-2 px-3 rounded-[10px] bg-red-400 text-white
                             font-semibold
-                             md:py-3 md:px-4.5 hover:bg-red-500 transition-all md:text-[18px]' onClick={() => setOpen(false)}>Cancel</button>
+                             md:py-3 md:px-4.5 active:scale-90 hover:bg-red-500 transition-all md:text-[18px] shadow-2xl' onClick={() => setOpen(false)}>Cancel</button>
                       <button className='cursor-pointer py-2 px-5 rounded-[10px] bg-blue-400 text-white
                             font-semibold
-                             md:py-3 md:px-7 hover:bg-blue-500 transition-all md:text-[18px] '>Save</button>
+                             md:py-3 md:px-7 active:scale-90 hover:bg-blue-500 transition-all md:text-[18px] shadow-2xl '>Save</button>
                   </div>
               </div>
           </div>
