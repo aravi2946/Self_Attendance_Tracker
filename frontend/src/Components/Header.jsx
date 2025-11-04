@@ -20,7 +20,7 @@ const Header = ({ setOpen }) => {
             hour12: true
         })
         setTiming({ date: dt, year: yr, month: mn, time: tm })
-        console.log(timing);
+       
 
 
 

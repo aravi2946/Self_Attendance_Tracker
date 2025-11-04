@@ -20,7 +20,7 @@ const Navbar = () => {
 
    
    
-      <div className={`container  sticky h-[100px] max-w-full bg-white py-5 px-3 md:py-6 md:px-10 rounded-b-lg  shadow  top-0 left-0 transition-all duration-300 ${visible ? 'opacity-100 translate-y-0' :'opacity-0 -translate-y-full '}`}>
+      <div className={`container  sticky h-[100px] max-w-full bg-white py-5 px-3 md:py-6 md:px-10 rounded-b-lg  shadow  top-0 left-0 transition-all duration-300 ${visible ? 'opacity-100 ' :'opacity-0  '}`}>
       
       <div className='flex justify-between items-center'>
               <div className='flex flex-col gap-0.5'>
