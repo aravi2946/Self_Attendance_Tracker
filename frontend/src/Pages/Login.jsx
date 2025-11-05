@@ -1,33 +1,25 @@
-import { useState } from "react"
-
+import { useContext, useState } from "react"
+import axios from "axios"
+import { atdContext } from "../Context/AtdContext"
 
 const Login = () => {
-    const [auth, setAuth] = useState("login")
-    const [data, setData] = useState({
-        name: '',
-        email: '',
-        password:''
-    })
-    const handleOnChange = (e) => {
-        setData({...data,[e.target.name]:e.target.value})
-        
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log(data);
-        
-    }
+
+
+    const { handleOnChange,handleSubmit,data,auth,setAuth } = useContext(atdContext)
+   
+
+
     return (
         <div className="h-screen flex justify-center items-center bg-gray-100 px-5">
             {/* Container */}
             <div className="bg-white flex flex-col  gap-5 w-full max-w-md py-7 px-5 rounded-lg shadow">
-                <h1 className="text-2xl font-semibold text-center md:text-3xl">Create Account</h1>
+                <h1 className="text-2xl font-semibold text-center md:text-3xl">{auth == "signup" ? "Create Account" : 'Login'}</h1>
                 <form className="flex flex-col gap-5 py-7">
                     {
                         auth == "signup" ? <div className="flex flex-col gap-2 justify-center">
                             <label htmlFor="name" className="font-semibold ">Name</label>
                             <input type="text" placeholder="Enter your name" id="name" className="border border-gray-300 px-2 py-2 rounded-lg"
-                                onChange={(e) => handleOnChange(e)} name="name" value={data.name}/>
+                                onChange={(e) => handleOnChange(e)} name="name" value={data.name} />
                         </div> : <></>
                     }
 
@@ -48,7 +40,7 @@ const Login = () => {
                         {auth == "signup" ? "Signup" : "Login"}</button>
 
 
-                <p className="text-center text-[16px] font-semibold hover:text-blue-400 cursor-pointer " onClick={() => setAuth(auth == "login" ? "signup" : "login")}>{auth == "login" ? "Already have account?" : "Don't have an account?"} </p>
+                    <p className="text-center text-[16px] font-semibold hover:text-blue-400 cursor-pointer " onClick={() => setAuth(auth == "login" ? "signup" : "login")}>{auth == "login" ? "Already have account?" : "Don't have an account?"} </p>
                 </form>
 
 
