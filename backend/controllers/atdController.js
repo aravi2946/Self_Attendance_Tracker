@@ -7,9 +7,9 @@ const atdController = async (req, res) => {
     const { date, isPresent } = req.body;
     try {
 
-        if (!date) {
-            return res.status(400).json({ success: false, msg: "Data not found" })
-        }
+        // if (!date) {
+        //     return res.status(400).json({ success: false, msg: "Data not found" })
+        // }
         //check if user is already exit or not
         const user = await atdModel.findOne({ userId: req.user.id })
         if (!user) {
@@ -80,13 +80,30 @@ const atdController = async (req, res) => {
 
 //adds previous attendance data
 const addPreviousDataController = async (req, res) => {
-    const { periods, presents } = req.body;
+    let { periods, presents } = req.body;
+    periods = Number(periods)
+    presents = Number(presents)
+
+
     try {
         const user = await atdModel.findOne({ userId: req.user.id })
 
-        if (!presents || !periods <= 0) {
+        if (periods<0 && presents<0) {
             return res.status(400).json({ success: false, msg: "Invalid input data" })
         }
+        if (!user) {
+            const newUser = new atdModel({
+                userId: req.user.id,
+                totalPeriods: 0,
+                totalPresents:  0,
+                result: 0,
+                daily: []
+   
+            })
+            await newUser.save();
+        }
+
+
         user.totalPeriods = periods;
         user.totalPresents = presents;
         user.result = parseFloat((user.totalPresents / user.totalPeriods) * 100).toFixed(2);
@@ -107,16 +124,18 @@ const fetchAtdController = async (req, res) => {
     try {
         const user = await atdModel.findOne({ userId: req.user.id })
 
+
         if (!user) {
-            return res.status(200).json({success:true, periods: 0, presents: 0, result: 0 })
+            return res.status(200).json({ success: true, periods: 0, presents: 0, result: 0 })
         }
 
         let details = {
             periods: user.totalPeriods || 0,
             presents: user.totalPresents || 0,
-            result: user.result||0
+            result: user.result || 0
         }
-        return res.status(200).json(details)
+        if (details)
+            return res.status(200).json(details)
 
 
 
@@ -131,6 +150,8 @@ const fetchAtdController = async (req, res) => {
 //fetching today's periods and presents
 const fetchTodayAtdController = async (req, res) => {
     const { date } = req.body;
+
+
     try {
         if (!date) {
             return res.status(400).json({ success: false, msg: "Pass Today's date " })
@@ -141,14 +162,14 @@ const fetchTodayAtdController = async (req, res) => {
             return res.json({ presents: 0, periods: 0 })
         }
 
-    
-            const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
-            let dailydata = {
-                presents: daily?.presents||0,
-                periods: daily?.periods||0
-            }
-            res.status(200).json({ success: true, dailydata })
-        
+
+        const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
+        let dailydata = {
+            presents: daily?.presents || 0,
+            periods: daily?.periods || 0
+        }
+        res.status(200).json({ success: true, dailydata })
+
 
 
 
@@ -163,20 +184,21 @@ const fetchTodayAtdController = async (req, res) => {
 }
 
 const resetAtdDataController = async (req, res) => {
+   
     try {
         await atdModel.updateOne(
             { userId: req.user.id },
             {
-                $set: {
+                $set:{
                     totalPeriods: 0,
                     totalPresents: 0,
-                    result:0,
-                    daily:[]
+                    result: 0,
+                    daily: []
                 }
             }
-        
+
         )
-        res.status(200).json({success:true,msg:"Reset Done Successfully"})
+        res.status(200).json({ success: true, msg: "Reset Done Successfully" })
     } catch (err) {
         console.log("Error in resetAtdDataController", err);
         res.status(500).json({ msg: "Internal Server Error" })
@@ -189,4 +211,4 @@ const resetAtdDataController = async (req, res) => {
 
 
 
-export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController,resetAtdDataController }
+export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController, resetAtdDataController }
