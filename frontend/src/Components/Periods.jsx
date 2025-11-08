@@ -1,36 +1,48 @@
 import React, { useState } from 'react'
 import Data from "./../cardData.json"
+import axios from 'axios'
+import { useContext } from 'react'
+import { atdContext } from '../Context/AtdContext'
 const Periods = () => {
-  const [periodBtn,setPeriodBtn] = useState({})
-  const periodBtnFun = (id,status) => {
-    
-    // if (!periodBtn[id]) {
-    //   const updated = { ...periodBtn, [id]: status ? 1 : 2 }
-    //   setPeriodBtn(updated)
-    // } else {
-    //   const updated = { ...periodBtn };
-    //   delete updated[id]
-    //   setPeriodBtn(updated)
-    //  }
-    
-    setPeriodBtn(prev => {
-      if (!prev[id]) {
-        const updated = { ...prev, [id]: status ? 1 : 2 }
-        return updated;
-      } else {
-        const updated = { ...prev }
-        delete updated[id]
-        return updated
-      } 
-    })
+  const { url } = useContext(atdContext)
+  const [periodBtn, setPeriodBtn] = useState({})
+  const periodBtnFun = async (id, status) => {
+
+    let date = new Date();
+    try {
+      let tokenVal = localStorage.getItem('Token')
+      let Date = date.toISOString().slice(0, 10)
+      const res = await axios.post(`${url}/api/atd/add`, { date: Date, isPresent: status }, { headers: { token: tokenVal } })
+      if (res.data.success) {
+        window.location.reload()
+      }
+      
+      if (!res.data.success)
+        alert(res.data.msg);
+
+    } catch (err) {
+      alert(err.response.data.msg);
+
+    }
+
+    // setPeriodBtn(prev => {
+    //   if (!prev[id]) {
+    //     const updated = { ...prev, [id]: status ? 1 : 2 }
+    //     return updated;
+    //   } else {
+    //     const updated = { ...prev }
+    //     delete updated[id]
+    //     return updated
+    //   } 
+    // })
     //we have to periodBtn in mongodb 
     // like  ids:{1:1}
-    
-    
-    
-     
-    
-    
+
+
+
+
+
+
 
   }
 
@@ -49,20 +61,20 @@ const Periods = () => {
                 <p className='text-[16px] font-semibold text-gray-700'>{val.timing}</p>
                 <div className='flex flex-row gap-4 justify-center my-2'>
                   <button className='py-1.5 px-6 rounded-lg bg-green-500 text-white font-semibold shadow cursor-pointer hover:bg-green-600 transition-all active:scale-90'
-                    onClick={() => periodBtnFun(val.id,true)}>{periodBtn[val.id]==1 ?"Present ✔️":"Present"}</button>
+                    onClick={() => periodBtnFun(val.id, true)}>{periodBtn[val.id] == 1 ? "Present ✔️" : "Present"}</button>
                   <button className='py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer hover:bg-red-600 transition-all active:scale-90'
-                    onClick={() => periodBtnFun(val.id,false)}>{periodBtn[val.id]==2?"Absent ❌":"Absent"}</button>
+                    onClick={() => periodBtnFun(val.id, false)}>{periodBtn[val.id] == 2 ? "Absent ❌" : "Absent"}</button>
 
                 </div>
               </div>
             )
-            
-          )
-       }
-          
+
+            )
+          }
+
         </div>
 
-       
+
       </div>
 
 

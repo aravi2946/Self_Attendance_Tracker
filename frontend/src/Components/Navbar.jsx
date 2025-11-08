@@ -24,7 +24,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
        let tokenVal= localStorage.removeItem("Token")
-        setToken(tokenVal)
+        // setToken(tokenVal)
         navigate('/')
 
     }

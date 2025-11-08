@@ -24,7 +24,7 @@ const AtdContextState = ({ children }) => {
     useEffect(() => {
         let tokenVal = localStorage.getItem("Token")
         setToken(tokenVal)
-        console.log(tokenVal);
+    
         
      },[])
 
@@ -77,7 +77,8 @@ const AtdContextState = ({ children }) => {
         handleSubmit,
         data,
         auth, setAuth,
-        token
+        token,
+        url
     }
 
      return (
