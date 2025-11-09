@@ -107,7 +107,7 @@ const Cards = () => {
 
     return (
         <div className='mx-2 my-4'>
-            <div className='container  py-3.5 flex flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
+            <div className='container  py-3.5  flex flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
 
                 <div className='px-5 py-5  border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center shadow hover:shadow-sky-50 md:w-[500px] '>
                     <p className='text-[16px] font-semibold text-gray-600 md:text[20px]'>Today's Attendance</p>

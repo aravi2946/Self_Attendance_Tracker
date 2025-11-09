@@ -2,81 +2,447 @@ import atdModel from "../models/AtdSchema.js";
 
 
 
-//adds attendance data 
+//adds attendance data
+// const atdController = async (req, res) => {
+//     const { date, isPresent, btnId } = req.body;
+//     try {
+
+//         // if (!date) {
+//         //     return res.status(400).json({ success: false, msg: "Data not found" })
+//         // }
+//         //check if user is already exit or not
+//         const user = await atdModel.findOne({ userId: req.user.id })
+//         if (!user) {
+
+//             const newUser = new atdModel({
+//                 userId: req.user.id,
+//                 totalPeriods: 1,
+//                 totalPresents: isPresent ? 1 : 0,
+//                 result: isPresent ? 100 : 0,
+//                 daily: [{
+//                     date: date,
+//                     presents: isPresent ? 1 : 0,
+//                     periods: 1,
+//                     btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }]
+//                 }]
+//             })
+//             await newUser.save();
+//             return res.status(200).json({ newUser })
+//         }
+
+//         let dailyData = user.daily.find(a => a.date.toISOString().slice(0, 10) == date)
+//         if (dailyData) {
+//             if (dailyData.periods >= 7) {
+//                 return res.json({ success: false, msg: "You have marked all periods today" })
+//             }
+//         }
+
+//         if (!dailyData) {
+//             user.totalPeriods += 1;
+//             user.totalPresents += 1;
+//             user.daily.push({
+//                 date: date,
+//                 presents: isPresent ? 1 : 0,
+//                 periods: 1,
+//                 btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }]
+//             })
+
+
+//         } else if (dailyData && isPresent) {
+
+//             let btnPresent = dailyData.btnIds.find(btn => btn.hasOwnProperty([btnId]))
+//             console.log(btnPresent);
+
+//             if (!btnPresent) {
+//                 dailyData.presents += 1;
+//                 dailyData.periods += 1;
+//                 dailyData.btnIds.push({ [btnId]: 1 })
+//             } else {
+//                 dailyData.btnIds = dailyData.btnIds.filter(obj => !([btnId] in obj))
+//                 user.totalPeriods -= 1;
+//                 user.totalPresents -= 1;
+//                 dailyData.presents -= 1;
+//                 dailyData.periods -= 1;
+//             }
+
+//         } else {
+//             let btnPresent = dailyData.btnIds.find(obj => obj.hasOwnProperty(btnId))
+//             if (!btnPresent) {
+//                 dailyData.periods += 1;
+//                 dailyData.btnIds.push({ [btnId]: 2 })
+//             } else {
+//                 dailyData.periods -= 1;
+//                 dailyData.btnIds = dailyData.btnIds.filter(obj => !([btnId] in obj))
+
+
+
+//             }
+
+
+//         }
+
+
+//         // user.totalPeriods++;
+//         // if (isPresent) {
+//         //     user.totalPresents++;
+//         // }
+//         user.result = parseFloat((user.totalPresents / user.totalPeriods) * 100).toFixed(2);
+//         await user.save();
+//         res.status(200).json({ success: true, user })
+
+
+//     } catch (err) {
+//         console.log("Error in atdController", err);
+//         res.status(500).json({
+//             success: false,
+//             msg: "Internal server error"
+//         })
+//     }
+
+
+// }
+
+//copilot code
+// const atdController = async (req, res) => {
+//     const { date, isPresent, btnId } = req.body;
+//     try {
+//         const user = await atdModel.findOne({ userId: req.user.id });
+
+//         // If user doesn't exist, create new record
+//         if (!user) {
+//             const newUser = new atdModel({
+//                 userId: req.user.id,
+//                 totalPeriods: 1,
+//                 totalPresents: isPresent ? 1 : 0,
+//                 result: isPresent ? 100 : 0,
+//                 daily: [
+//                     {
+//                         date,
+//                         presents: isPresent ? 1 : 0,
+//                         periods: 1,
+//                         btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }],
+//                     },
+//                 ],
+//             });
+//             await newUser.save();
+//             return res.status(200).json({ success: true, user: newUser });
+//         }
+
+//         // Find today's data
+//         let dailyData = user.daily.find(
+//             (a) => a.date.toISOString().slice(0, 10) === date
+//         );
+
+//         // if (dailyData && dailyData.periods >= 7) {
+//         //     return res.json({
+//         //         success: false,
+//         //         msg: "You have marked all periods today",
+//         //     });
+//         // }
+
+//         // Case 1: No daily data yet
+//         if (!dailyData) {
+//             user.totalPeriods += 1;
+//             if (isPresent) user.totalPresents += 1;
+
+//             user.daily.push({
+//                 date,
+//                 presents: isPresent ? 1 : 0,
+//                 periods: 1,
+//                 btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }],
+//             });
+//         }
+
+//         // Case 2: Marking as present
+//         else if (isPresent) {
+//             let btnPresent = dailyData.btnIds.find((btn) =>
+//                 btn.hasOwnProperty(btnId)
+//             );
+
+//             if (!btnPresent) {
+//                 dailyData.presents += 1;
+//                 dailyData.periods += 1;
+//                 user.totalPeriods += 1;
+//                 user.totalPresents += 1;
+//                 dailyData.btnIds.push({ [btnId]: 1 });
+//             } else {
+//                 // toggle off
+//                 dailyData.btnIds = dailyData.btnIds.filter(
+//                     (obj) => !obj.hasOwnProperty(btnId)
+//                 );
+//                 if (dailyData.presents > 0 && dailyData.periods) {
+
+//                     dailyData.presents -= 1;
+//                     dailyData.periods -= 1;
+//                 } if (user.totalPeriods > 0 && user.totalPresents > 0) {
+
+//                     user.totalPeriods -= 1;
+//                     user.totalPresents -= 1;
+//                 }
+//             }
+//         }
+
+//         // Case 3: Marking as absent
+//         else {
+//             let btnPresent = dailyData.btnIds.find((obj) =>
+//                 obj.hasOwnProperty(btnId)
+//             );
+
+//             if (!btnPresent) {
+//                 dailyData.periods += 1;
+//                 user.totalPeriods += 1;
+//                 dailyData.btnIds.push({ [btnId]: 2 });
+//             } else {
+//                 // toggle off
+//                 dailyData.periods -= 1;
+//                 user.totalPeriods -= 1;
+
+//                 dailyData.btnIds = dailyData.btnIds.filter(
+//                     (obj) => !obj.hasOwnProperty(btnId)
+//                 );
+//             }
+//         }
+
+//         // Update result percentage
+//         user.result = user.totalPeriods
+//             ? Number(((user.totalPresents / user.totalPeriods) * 100).toFixed(2))
+//             : 0;
+
+//         await user.save();
+
+//         let daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
+//         let result = {
+//             status: daily?.btnIds
+//         }
+//         res.status(200).json({ success: true, user, result });
+//     } catch (err) {
+//         console.log("Error in atdController", err);
+//         res.status(500).json({
+//             success: false,
+//             msg: "Internal server error",
+//         });
+//     }
+// };
+
+//copilot 2 code
+// const atdController = async (req, res) => {
+//     const { date, isPresent, btnId } = req.body;
+//     try {
+//         const user = await atdModel.findOne({ userId: req.user.id });
+
+//         // If user doesn't exist, create new record
+//         if (!user) {
+//             const newUser = new atdModel({
+//                 userId: req.user.id,
+//                 totalPeriods: 1,
+//                 totalPresents: isPresent ? 1 : 0,
+//                 result: isPresent ? 100 : 0,
+//                 daily: [
+//                     {
+//                         date,
+//                         presents: isPresent ? 1 : 0,
+//                         periods: 1,
+//                         btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }],
+//                     },
+//                 ],
+//             });
+//             await newUser.save();
+//             return res.status(200).json({ success: true, user: newUser });
+//         }
+
+//         // Find today's data
+//         let dailyData = user.daily.find(
+//             (a) => a.date.toISOString().slice(0, 10) === date
+//         );
+
+//         // Case 1: No daily data yet
+//         if (!dailyData) {
+//             user.totalPeriods += 1;
+//             if (isPresent) user.totalPresents += 1;
+
+//             user.daily.push({
+//                 date,
+//                 presents: isPresent ? 1 : 0,
+//                 periods: 1,
+//                 btnIds: [isPresent ? { [btnId]: 1 } : { [btnId]: 2 }],
+//             });
+//         }
+
+//         // Case 2: Marking as present
+//         else if (isPresent) {
+//             let btnPresent = dailyData.btnIds.find((btn) =>
+//                 btn.hasOwnProperty(btnId)
+//             );
+
+//             if (!btnPresent) {
+//                 dailyData.presents += 1;
+//                 dailyData.periods += 1;
+//                 user.totalPeriods += 1;
+//                 user.totalPresents += 1;
+//                 dailyData.btnIds.push({ [btnId]: 1 });
+//             } else {
+//                 // toggle off → clamp values
+//                 dailyData.btnIds = dailyData.btnIds.filter(
+//                     (obj) => !obj.hasOwnProperty(btnId)
+//                 );
+//                 dailyData.presents = Math.max(0, dailyData.presents - 1);
+//                 dailyData.periods = Math.max(0, dailyData.periods - 1);
+//                 user.totalPeriods = Math.max(0, user.totalPeriods - 1);
+//                 user.totalPresents = Math.max(0, user.totalPresents - 1);
+//             }
+//         }
+
+//         // Case 3: Marking as absent
+//         else {
+//             let btnPresent = dailyData.btnIds.find((obj) =>
+//                 obj.hasOwnProperty(btnId)
+//             );
+
+//             if (!btnPresent) {
+//                 dailyData.periods += 1;
+//                 user.totalPeriods += 1;
+//                 dailyData.btnIds.push({ [btnId]: 2 });
+//             } else {
+//                 // toggle off → clamp values
+//                 dailyData.periods = Math.max(0, dailyData.periods - 1);
+//                 user.totalPeriods = Math.max(0, user.totalPeriods - 1);
+//                 dailyData.btnIds = dailyData.btnIds.filter(
+//                     (obj) => !obj.hasOwnProperty(btnId)
+//                 );
+//             }
+//         }
+
+//         // Update result percentage
+//         user.result = user.totalPeriods
+//             ? Number(((user.totalPresents / user.totalPeriods) * 100).toFixed(2))
+//             : 0;
+
+//         await user.save();
+
+//         let daily = user?.daily?.find(
+//             (a) => a.date.toISOString().slice(0, 10) == date
+//         );
+//         let result = {
+//             status: daily?.btnIds,
+//         };
+//         res.status(200).json({ success: true, user, result });
+//     } catch (err) {
+//         console.log("Error in atdController", err);
+//         res.status(500).json({
+//             success: false,
+//             msg: "Internal server error",
+//         });
+//     }
+// };
+
 const atdController = async (req, res) => {
-    const { date, isPresent } = req.body;
+    const { date, isPresent, btnId } = req.body;
     try {
+        const user = await atdModel.findOne({ userId: req.user.id });
 
-        // if (!date) {
-        //     return res.status(400).json({ success: false, msg: "Data not found" })
-        // }
-        //check if user is already exit or not
-        const user = await atdModel.findOne({ userId: req.user.id })
+        // If user doesn't exist, create new record
         if (!user) {
-
             const newUser = new atdModel({
                 userId: req.user.id,
                 totalPeriods: 1,
                 totalPresents: isPresent ? 1 : 0,
                 result: isPresent ? 100 : 0,
-                daily: [{
-                    date: date,
-                    presents: isPresent ? 1 : 0,
-                    periods: 1
-                }]
-            })
+                daily: [
+                    {
+                        date,
+                        presents: isPresent ? 1 : 0,
+                        periods: 1,
+                        btnIds: [{ [btnId]: isPresent ? 1 : 2 }],
+                    },
+                ],
+            });
             await newUser.save();
-            return res.status(200).json({ newUser })
+            return res.status(200).json({
+                success: true,
+                user: newUser,
+                result: { status: newUser.daily[0].btnIds }
+            });
         }
 
-        const dailyData = user.daily.find(a => a.date.toISOString().slice(0, 10) == date)
-        if (dailyData) {
-            if (dailyData.periods >= 7) {
-                return res.json({ success: false, msg: "You have marked all periods today" })
+        // Find today's data
+        let dailyData = user.daily.find(
+            (a) => a.date.toISOString().slice(0, 10) === date
+        );
+
+        // Case 1: No daily data for this date yet
+        if (!dailyData) {
+            user.totalPeriods += 1;
+            if (isPresent) user.totalPresents += 1;
+
+            user.daily.push({
+                date,
+                presents: isPresent ? 1 : 0,
+                periods: 1,
+                btnIds: [{ [btnId]: isPresent ? 1 : 2 }],
+            });
+        }
+        // Case 2: Daily data exists - check if button already clicked
+        else {
+            let btnPresent = dailyData.btnIds.find((btn) =>
+                btn.hasOwnProperty(btnId)
+            );
+
+            if (!btnPresent) {
+                // Button not clicked yet - add new period
+                dailyData.periods += 1;
+                user.totalPeriods += 1;
+
+                if (isPresent) {
+                    dailyData.presents += 1;
+                    user.totalPresents += 1;
+                }
+
+                dailyData.btnIds.push({ [btnId]: isPresent ? 1 : 2 });
+            } else {
+                // Button already clicked - toggle off
+                const wasPresent = btnPresent[btnId] === 1;
+
+                dailyData.btnIds = dailyData.btnIds.filter(
+                    (obj) => !obj.hasOwnProperty(btnId)
+                );
+
+                dailyData.periods = Math.max(0, dailyData.periods - 1);
+                user.totalPeriods = Math.max(0, user.totalPeriods - 1);
+
+                if (wasPresent) {
+                    dailyData.presents = Math.max(0, dailyData.presents - 1);
+                    user.totalPresents = Math.max(0, user.totalPresents - 1);
+                }
             }
         }
 
-        if (!dailyData) {
-
-            user.daily.push({
-                date: date,
-                presents: isPresent ? 1 : 0,
-                periods: 1
-            })
-
-        } else if (isPresent) {
-            dailyData.presents += 1;
-            dailyData.periods += 1;
-
-        } else {
-            dailyData.periods += 1;
-        }
-
-
-        user.totalPeriods++;
-        if (isPresent) {
-
-            user.totalPresents++;
-        }
-
-        user.result = parseFloat((user.totalPresents / user.totalPeriods) * 100).toFixed(2);
+        // Update result percentage
+        user.result = user.totalPeriods
+            ? Number(((user.totalPresents / user.totalPeriods) * 100).toFixed(2))
+            : 0;
 
         await user.save();
 
-        res.status(200).json({ success: true, user })
+        // Find updated daily data
+        let daily = user.daily.find(
+            (a) => a.date.toISOString().slice(0, 10) === date
+        );
 
+        let result = {
+            status: daily?.btnIds || [],
+        };
 
-
+        res.status(200).json({ success: true, user, result });
     } catch (err) {
         console.log("Error in atdController", err);
         res.status(500).json({
             success: false,
-            msg: "Internal server error"
-        })
+            msg: "Internal server error",
+        });
     }
+};
 
 
-}
 
 //adds previous attendance data
 const addPreviousDataController = async (req, res) => {
@@ -88,17 +454,17 @@ const addPreviousDataController = async (req, res) => {
     try {
         const user = await atdModel.findOne({ userId: req.user.id })
 
-        if (periods<0 && presents<0) {
+        if (periods < 0 && presents < 0) {
             return res.status(400).json({ success: false, msg: "Invalid input data" })
         }
         if (!user) {
             const newUser = new atdModel({
                 userId: req.user.id,
                 totalPeriods: 0,
-                totalPresents:  0,
+                totalPresents: 0,
                 result: 0,
                 daily: []
-   
+
             })
             await newUser.save();
         }
@@ -107,6 +473,8 @@ const addPreviousDataController = async (req, res) => {
         user.totalPeriods = periods;
         user.totalPresents = presents;
         user.result = parseFloat((user.totalPresents / user.totalPeriods) * 100).toFixed(2);
+
+
 
 
         await user.save();
@@ -168,6 +536,7 @@ const fetchTodayAtdController = async (req, res) => {
             presents: daily?.presents || 0,
             periods: daily?.periods || 0
         }
+        // console.log(dailydata);
         res.status(200).json({ success: true, dailydata })
 
 
@@ -184,12 +553,12 @@ const fetchTodayAtdController = async (req, res) => {
 }
 
 const resetAtdDataController = async (req, res) => {
-   
+
     try {
         await atdModel.updateOne(
             { userId: req.user.id },
             {
-                $set:{
+                $set: {
                     totalPeriods: 0,
                     totalPresents: 0,
                     result: 0,
@@ -207,8 +576,33 @@ const resetAtdDataController = async (req, res) => {
 }
 
 
+const BtnStatusController = async (req, res) => {
+    const { date } = req.body
+
+    try {
+        if (!date) {
+            return res.status(400).json({ success: false, msg: "Pass Today's date " })
+        }
+        const user = await atdModel.findOne({ userId: req.user.id })
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+        const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
+        let dailydata = {
+            status: daily.btnIds
+        }
+        res.json(dailydata)
 
 
 
 
-export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController, resetAtdDataController }
+    } catch (err) {
+        console.log(err);
+
+    }
+}
+
+
+
+export { atdController, addPreviousDataController, fetchAtdController, fetchTodayAtdController, resetAtdDataController, BtnStatusController }

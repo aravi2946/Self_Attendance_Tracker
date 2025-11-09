@@ -22,7 +22,8 @@ const atdSchema = mongoose.Schema({
             type: Number,
             default: 0,
             max:7
-        }
+        },
+        btnIds:[]
     }],
     totalPeriods: {
         type: Number,
