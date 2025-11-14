@@ -158,13 +158,12 @@ const addPreviousDataController = async (req, res) => {
 //fetching totalPeriods and totalPresents
 const fetchAtdController = async (req, res) => {
     try {
-        const user = await atdModel.findOne({ userId: req.user.id })
-
+        const user = await atdModel.findOne({ userId: req.user.id },"totalPeriods totalPresents result").lean()
 
         if (!user) {
             return res.status(200).json({ success: true, periods: 0, presents: 0, result: 0 })
         }
-
+       
         let details = {
             periods: user.totalPeriods || 0,
             presents: user.totalPresents || 0,
@@ -172,9 +171,6 @@ const fetchAtdController = async (req, res) => {
         }
         if (details)
             return res.status(200).json(details)
-
-
-
 
     } catch (err) {
         console.log("Error in fetchAtdController", err);
@@ -186,31 +182,25 @@ const fetchAtdController = async (req, res) => {
 //fetching today's periods and presents
 const fetchTodayAtdController = async (req, res) => {
     const { date } = req.body;
-
-
+ 
     try {
         if (!date) {
             return res.status(400).json({ success: false, msg: "Pass Today's date " })
         }
-        const user = await atdModel.findOne({ userId: req.user.id })
-
-        if (!user) {
+        const daily = await atdModel.findOne({ userId: req.user.id,"daily.date":new Date(date)},{"daily.$":1}).lean()
+         
+        if (!daily) {
             return res.json({ presents: 0, periods: 0 })
         }
 
-
-        const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
+        
+        // const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
         let dailydata = {
-            presents: daily?.presents || 0,
-            periods: daily?.periods || 0
+            presents: daily.daily[0]?.presents || 0,
+            periods: daily.daily[0]?.periods || 0
         }
         // console.log(dailydata);
         res.status(200).json({ success: true, dailydata })
-
-
-
-
-
 
 
     } catch (err) {

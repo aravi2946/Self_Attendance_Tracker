@@ -4,71 +4,25 @@ import axios from 'axios'
 
 const Cards = () => {
 
-    const { url } = useContext(atdContext)
-    let todays;
-    const [data, setData] = useState({
-        periods: '',
-        presents: '',
-        result: '',
+    const { url,
+        fetchData,
+        fetchTodaysData,
+        atdData,
+        tData } = useContext(atdContext)
 
-    })
-    const [tData, setTData] = useState({
-        presents: '',
-        periods: ''
-    })
-
-    const fetchData = async (tokenVal) => {
-
-        try {
-            const res = await axios.get(`${url}/api/atd`, {
-                headers: {
-                    token: tokenVal
-
-                }
-            })
-
-            let total = res?.data
-            setData(total)
-
-        } catch (err) {
-            console.log(err);
-
-        }
-    }
-
-    const fetchTodaysData = async (tokenVal) => {
-        let date = new Date()
-
-        try {
-            let Date = date.toISOString().slice(0, 10)
-            const res = await axios.post(`${url}/api/atd/today`, { date: Date }, { headers: { token: tokenVal } })
-
-            todays = res.data.dailydata;
-            const result = ((todays?.presents / todays?.periods) * 100).toFixed(2)
-            if (result > 0) {
-
-                todays["result"] = result;
-            }
-
-            setTData(todays)
-
-        } catch (err) {
-            console.log(err);
-
-        }
-    }
-
+  
     const resetBtn = async (e) => {
         e.preventDefault()
-        let tokenVal = localStorage.getItem('Token')
         try {
+            let tokenVal = localStorage.getItem('Token')
             const confirm = window.confirm("Are you sure you want to reset attendance?")
             if (!confirm) return;
 
             const res = await axios.put(`${url}/api/atd/reset`, {}, { headers: { token: tokenVal } })
 
-            if (res.data.success) {
-                window.location.reload()
+            if (res.atdData.success) {
+                fetchData(tokenVal)
+                fetchTodaysData(tokenVal)
             }
 
 
@@ -79,12 +33,10 @@ const Cards = () => {
     }
 
     const Days = () => {
-
-        let t = data.periods
-        let p = data.presents
+        let t = atdData.periods
+        let p = atdData.presents
         let x = Math.ceil(((0.75) * (t) - p) / 1.75)
         return x;
-
 
     }
 
@@ -106,7 +58,7 @@ const Cards = () => {
 
 
     return (
-        <div className='mx-2 my-4'>
+        <div className='flex justify-center'>
             <div className='container  py-3.5  flex flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
 
                 <div className='px-5 py-5  border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center shadow hover:shadow-sky-50 md:w-[500px] '>
@@ -126,8 +78,8 @@ const Cards = () => {
 
                     </div>
                     <div className='flex gap-4 items-center'>
-                        <h2 className='text-3xl font-bold md:text-4xl'>{data?.result || 0}%</h2>
-                        <p className='text-[16px] text-gray-500 md:text-[18px] '>{data?.presents}/{data?.periods}</p>
+                        <h2 className='text-3xl font-bold md:text-4xl'>{atdData?.result || 0}%</h2>
+                        <p className='text-[16px] text-gray-500 md:text-[18px] '>{atdData?.presents || 0}/{atdData?.periods || 0}</p>
                     </div>
                 </div>
 
@@ -135,7 +87,7 @@ const Cards = () => {
                     <p className='text-[16px] font-semibold text-gray-600 md:text[20px]'>Attendance Status</p>
                     <div className='flex flex-col gap-2 '>
                         {
-                            data?.result < 75 ?
+                            atdData?.result < 75 ?
                                 <>
 
                                     <h2 className='text-3xl font-bold md:text-4xl text-red-500'>Below 75%</h2>

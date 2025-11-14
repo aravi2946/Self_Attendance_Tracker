@@ -19,11 +19,75 @@ const AtdContextState = ({ children }) => {
          setData({ ...data, [e.target.name]: e.target.value })
 
     }
+
+    //fetching attendance Data
+     const [atdData, setAtdData] = useState({
+            periods: '',
+            presents: '',
+            result: '',
+    
+     })
+     const [tData, setTData] = useState({
+            presents: '',
+            periods: ''
+        })
+    const fetchData = async (tokenVal) => {
+
+        try {
+            const res = await axios.get(`${url}/api/atd`, {
+                headers: {
+                    token: tokenVal
+
+                }
+            })
+
+            let total = res?.data
+            
+            
+            setAtdData(total)
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    }
+
+    let todays;
+
+    const fetchTodaysData = async (tokenVal) => {
+        let date = new Date()
+
+        try {
+            let Date = date.toISOString().slice(0, 10)
+            const res = await axios.post(`${url}/api/atd/today`, { date: Date }, { headers: { token: tokenVal } })
+
+            todays = res.data.dailydata;
+            const result = ((todays?.presents / todays?.periods) * 100).toFixed(2)
+            if (result > 0) {
+
+                todays["result"] = result;
+            }
+
+            setTData(todays)
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    }
+
+
     
     //when page refreshed
     useEffect(() => {
         let tokenVal = localStorage.getItem("Token")
-        setToken(tokenVal)
+        if (tokenVal) {
+            setToken(tokenVal)
+            fetchData(tokenVal)
+            fetchTodaysData(tokenVal)
+        }
+        else
+          setToken("")
     
         
      },[])
@@ -78,7 +142,13 @@ const AtdContextState = ({ children }) => {
         data,
         auth, setAuth,
         token,
-        url
+        url,
+        fetchData,
+        fetchTodaysData,
+        atdData,
+        setAtdData,
+        tData,
+        setTData
     }
 
      return (
