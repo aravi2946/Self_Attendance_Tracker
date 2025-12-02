@@ -20,22 +20,16 @@ const Navbar = () => {
         setLoading(false)
         window.location.href = "/login"
 
-
-
-    //    let tokenVal= localStorage.removeItem("Token")
-    //    window.location.reload() 
-        
-       
-        
-
     }
     return (
 
 
 
-        <div className={`container  sticky h-[100px] max-w-full bg-white py-5 px-3 md:py-6 md:px-10 rounded-b-lg  shadow  top-0 left-0 transition-all duration-300 `}>
+        <div className={`fixed  h-[100px] bg-white py-5 px-3 md:py-6 md:px-10 rounded-b-lg  shadow  top-0 right-0 left-0 transition-all duration-300 z-50`}>
+    
+      
 
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center '>
                 <div className='flex flex-col gap-0.5'>
                     <h2 className='font-sans-serif font-bold text-indigo-600 text-[20px] md:text-2xl tracking-wide'>AttendanceTracker</h2>
                     <p className='text-[11px] md:text-[14px] font-semibold text-center text-gray-500 '>Attendance made simple</p>

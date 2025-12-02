@@ -58,10 +58,10 @@ const Cards = () => {
 
 
     return (
-        <div className='flex justify-center'>
-            <div className='container  py-3.5  flex flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
+        <div className='flex justify-center mx-5 '>
+            <div className='container  py-3.5  flex max-md:flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
 
-                <div className='px-5 py-5  border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center shadow hover:shadow-sky-50 md:w-[500px] '>
+                <div className='px-5 py-5  border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center  shadow hover:shadow-sky-50 md:w-[500px] '>
                     <p className='text-[16px] font-semibold text-gray-600 md:text[20px]'>Today's Attendance</p>
                     <div className='flex gap-4 items-center'>
                         <h2 className='text-3xl font-bold md:text-4xl'>{tData?.result || 0}%</h2>
@@ -83,14 +83,14 @@ const Cards = () => {
                     </div>
                 </div>
 
-                <div className='px-5 py-5 border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center shadow hover:shadow-sky-50 md:w-[500px]'>
+                <div className='px-5 py-5 border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center shadow hover:shadow-sky-50 md:w-[500px] min-w-[200px]'>
                     <p className='text-[16px] font-semibold text-gray-600 md:text[20px]'>Attendance Status</p>
                     <div className='flex flex-col gap-2 '>
                         {
                             atdData?.result < 75 ?
                                 <>
 
-                                    <h2 className='text-3xl font-bold md:text-4xl text-red-500'>Below 75%</h2>
+                                    <h2 className='text-2xl font-bold md:text-[29px] text-red-500 '>Below 75%</h2>
                                     <p className='text-[14px] text-gray-500 md:text-[16px] '>You need to attend {Days()} days to reach 75%</p>
                                 </>
                                 :

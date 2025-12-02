@@ -10,15 +10,15 @@ const app = express();
 
 //api end points
 app.use(express.json())
-app.use(cors())
-app.use('/api/user',userRouter)
+app.use(cors({ origin: '*', credentials: true }))
+app.use('/api/user', userRouter)
 app.use('/api/atd', atdRoutes)
 
 //database
 connectToDB();
 
 const port = process.env.PORT;
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
     console.log(`Server running at ${port}`);
 
 })

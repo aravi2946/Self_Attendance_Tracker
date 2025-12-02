@@ -8,28 +8,17 @@ import Header from '../Components/Header'
 const Home = ({ open, setOpen }) => {
   return (
     <>
-      {open ? <PrevAtd setOpen={setOpen} /> : <></>}
-      <div className="h-screen ">
+      {open && <PrevAtd setOpen={setOpen} />}
 
-        <div>
+      <Navbar />
 
-          <Navbar />
-        </div>
-        <div className=''>
+      <div className="mt-[120px]">
+        <Header setOpen={setOpen} />
 
-          <Header setOpen={setOpen} />
-        </div>
-
-        <div>
+        <div className="px-3 md:px-10 space-y-6">
           <Cards />
-        </div>
-
-        <div>
           <Periods />
         </div>
-        
-
-
       </div>
     </>
   )

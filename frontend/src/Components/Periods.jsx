@@ -63,20 +63,19 @@ const Periods = () => {
   }, [])
 
   return (
-    <div className='pb-2 sm:w-full  mt-10'>
-      <div className=' flex flex-col gap-2 mx-3 md:mx-30 '>
+    <div className='pb-2 sm:w-full  my-10 '>
+      <div className=' flex flex-col gap-2 mx-3  '>
 
         <div className='text-center md:my-5 '>
           <h2 className=' text-3xl font-semibold font-sans'>Today's Attendance</h2>
         </div>
-        <div className=' flex flex-col  gap-4 px-3 py-2 text-center  md:flex-row md:gap-5 md:flex-wrap  '>
+        <div className='flex  flex-col gap-4 px-3 py-5 text-center md:flex-row md:gap-5 md:flex-wrap'>
           {
 
 
             Data.map((val, index) => (
 
-
-              <div key={index} className='border shadow border-gray-200 py-4 px-2.5 w-100 rounded-lg mx-auto flex flex-col gap-3'>
+              <div key={index} className='border shadow border-gray-200 py-4 px-2.5 w-100 rounded-lg mx-auto flex flex-col gap-3 sm:w-80 max-sm:w-70'>
                 <h2 className='text-[20px] md:text-2xl font-semibold '>{val.period}</h2>
                 <p className='text-[16px] font-semibold text-gray-700'>{val.timing}</p>
 
