@@ -17,6 +17,8 @@ app.use('/api/atd', atdRoutes)
 //database
 connectToDB();
 
+
+
 const port = process.env.PORT;
 app.listen(port, "0.0.0.0", () => {
     console.log(`Server running at ${port}`);

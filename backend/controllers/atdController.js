@@ -248,7 +248,7 @@ const BtnStatusController = async (req, res) => {
         }
         const daily = await user?.daily?.find(a => a.date.toISOString().slice(0, 10) == date)
         let dailydata = {
-            status: daily.btnIds
+            status: daily?.btnIds
         }
         res.json(dailydata)
 

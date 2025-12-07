@@ -5,6 +5,8 @@ import { useState } from "react";
 import Login from "./Pages/Login";
 function App() {
   const [open, setOpen] = useState(false)
+  console.log(open);
+  
   return (
     <div className="">
       <Routes>

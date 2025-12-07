@@ -1,22 +1,36 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { atdContext } from '../Context/AtdContext'
 import axios from 'axios'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
-const Cards = () => {
+const Cards = ({menuRef}) => {
 
     const { url,
         fetchData,
         fetchTodaysData,
         atdData,
         tData } = useContext(atdContext)
-
+   
+    const [open,setOpen] = useState(false)
   
     const resetBtn = async (e) => {
         e.preventDefault()
         try {
             let tokenVal = localStorage.getItem('Token')
-            const confirm = window.confirm("Are you sure you want to reset attendance?")
-            if (!confirm) return;
+            
+            // const confirm = window.confirm("Are you sure you want to reset attendance?")
+            // if (!confirm) return;
 
             const res = await axios.put(`${url}/api/atd/reset`, {}, { headers: { token: tokenVal } })
 
@@ -29,6 +43,8 @@ const Cards = () => {
         } catch (err) {
             console.log(err.response);
 
+        } finally {
+            setOpen(false)
         }
     }
 
@@ -53,12 +69,14 @@ const Cards = () => {
             }
         }
         fetchAllData();
-    }, [])
+    }, [resetBtn])
+    
 
 
 
     return (
-        <div className='flex justify-center mx-5 '>
+        <div className='flex justify-center mx-5 ' ref={menuRef}>
+
             <div className='container  py-3.5  flex max-md:flex-col gap-3 md:flex-row md:mx-auto md:justify-center md:gap-10 md:py-1'>
 
                 <div className='px-5 py-5  border border-gray-50 rounded-lg flex flex-col gap-2.5 justify-center  shadow hover:shadow-sky-50 md:w-[500px] '>
@@ -74,7 +92,28 @@ const Cards = () => {
                     <div className='flex justify-between items-center'>
                         <p className='text-[16px] font-semibold text-gray-600 md:text[20px]'>Overall Attendance</p>
 
-                        <button className='border border-gray-200 shadow px-1.5 py-1 rounded-lg cursor-pointer hover:bg-gray-50 active:bg-gray-200' onClick={resetBtn}>Reset</button>
+                        {/* Shadcn Alert component */}
+
+                        <AlertDialog open={open} onOpenChange={setOpen}>
+                            <AlertDialogTrigger asChild>
+                                <button className='border border-gray-200 shadow px-1.5 py-1 rounded-lg cursor-pointer hover:bg-gray-50 active:bg-gray-200' >Reset</button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-[14px]">
+                                        You want to reset all the data?
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                                    <AlertDialogAction className="cursor-pointer" onClick={resetBtn}>
+                                        Continue
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                       
 
                     </div>
                     <div className='flex gap-4 items-center'>

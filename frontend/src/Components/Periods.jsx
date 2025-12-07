@@ -6,9 +6,10 @@ import { atdContext } from '../Context/AtdContext'
 import { useEffect } from 'react'
 const Periods = () => {
   const { url, fetchData,
-    fetchTodaysData, } = useContext(atdContext)
+    fetchTodaysData } = useContext(atdContext)
   const [btnstatus, setBtnStatus] = useState({})
   const [periodBtn, setPeriodBtn] = useState({})
+  
 
 
   const periodBtnFun = async (id, status) => {
@@ -18,7 +19,7 @@ const Periods = () => {
       let tokenVal = localStorage.getItem('Token')
       let Date = date.toISOString().slice(0, 10)
       const res = await axios.post(`${url}/api/atd/add`, { date: Date, isPresent: status, btnId: id }, { headers: { token: tokenVal } })
-      
+
 
       if (res.data.success) {
         async function loadData() {
@@ -50,8 +51,11 @@ const Periods = () => {
       let Date = date.toISOString().slice(0, 10)
       const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
       let Status = res?.data?.status;
-      let status = Object.assign({}, ...Status)
-      setBtnStatus(status)
+      if (Status) {
+        
+        let status = Object.assign({}, ...Status)
+        setBtnStatus(status)
+      }
 
     } catch (err) {
       console.log(err);
@@ -59,8 +63,9 @@ const Periods = () => {
     }
   }
   useEffect(() => {
+
     fetchBtnStatus()
-  }, [])
+  }, [periodBtnFun])
 
   return (
     <div className='pb-2 sm:w-full  my-10 '>

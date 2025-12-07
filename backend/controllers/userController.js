@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt"
 import userModel from "../models/userSchema.js";
 import jwt from "jsonwebtoken"
+import sendEmail from "../NodeMailer/Mail.js";
 
 
-const createToken = (id,name) => {
-    return jwt.sign({ id, name }, process.env.JWT_SECRET,{expiresIn:'7d'})
+const createToken = (id,name,email) => {
+    return jwt.sign({ id, name,email }, process.env.JWT_SECRET,{expiresIn:'7d'})
 }
 
 const registerController = async (req, res) => {
@@ -25,7 +26,11 @@ const registerController = async (req, res) => {
         })
 
         await newUser.save();
-       const token =  createToken(newUser._id,newUser.name)
+        await sendEmail(newUser.email, newUser.name)
+        //session
+       
+        const token = createToken(newUser._id, newUser.name,newUser.email)
+        
         res.status(200).json({success:true,msg:"Registered Successfully",token})
 
 
@@ -52,7 +57,9 @@ const loginController = async (req, res) => {
             return res.status(401).json({success:false,msg:"Incorrect Password"})
         }
        
-        const token = createToken(user._id,user.name)
+        //session
+       
+        const token = createToken(user._id,user.name,user.email)
 
         res.status(200).json({success:true,msg:"Login Success",token})
 

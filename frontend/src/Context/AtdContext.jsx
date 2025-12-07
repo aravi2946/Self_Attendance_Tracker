@@ -1,13 +1,17 @@
-import { Children, createContext, useEffect, useState } from "react";
+import { Children, createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
-
+import { toast, Toaster } from "sonner";
+// import jwtDecode from "jwt-decode"
+import {jwtDecode} from "jwt-decode";
 export const atdContext = createContext(null)
+
 
 const AtdContextState = ({ children }) => {
     const [auth, setAuth] = useState("login")
     const [token, setToken] = useState('')
     const navigate = useNavigate()
+  
 
     // const url = "http://localhost:3000";
     const url = "http://192.168.29.44:3000"
@@ -79,14 +83,30 @@ const AtdContextState = ({ children }) => {
     }
 
 
-    
+    //decode the token
+    const [userData, setUserData] = useState({
+        name: "",
+        email: ""
+    })
+    const DecodeToken = (token) => {
+        const decode = jwtDecode(token)
+        
+        const name = decode.name
+        const email = decode.email
+        
+        setUserData({name,email})
+ 
+    }
+   
     //when page refreshed
+
     useEffect(() => {
         let tokenVal = localStorage.getItem("Token")
         if (tokenVal) {
             setToken(tokenVal)
             fetchData(tokenVal)
             fetchTodaysData(tokenVal)
+            DecodeToken(tokenVal)
         }
         else
           setToken("")
@@ -95,23 +115,34 @@ const AtdContextState = ({ children }) => {
      },[])
 
 
-     const handleSubmit = async (e) => {
+    //login functions
+    
+    const [isLoading, setIsLoading] = useState(false)
+    const handleSubmit = async (e) => {
+         
+        setIsLoading(true)
          e.preventDefault()
          if (auth == "login") {
              let newUrl = `${url}/api/user/login`;
              try {
-
                  const res = await axios.post(newUrl, data)
-                 alert(res.data.msg)
-                 if (res.data.success) {
-                     navigate('/')
-                 }
+                 
+                 setIsLoading(false)
+                 toast.success(res.data.msg)
+                 console.log(res.data.msg);
+                 setInterval(() => {
+                     
+                     if (res.data.success) {
+                         navigate('/')
+                     }
+                 },1000)
                  let tokenVal = res.data.token;
                  setToken(tokenVal)
                  localStorage.setItem('Token',tokenVal)
     
              } catch (err) {
-                 alert(err.response.data.msg)
+                 setIsLoading(false)
+                 toast.error(err.response.data.msg)
 
              }
 
@@ -121,7 +152,7 @@ const AtdContextState = ({ children }) => {
              try {
 
                  const res = await axios.post(newUrl, data)
-                 alert(res.data.msg)
+                 toast.success(res.data.msg)
                  let tokenVal = res.data.token;
                  if (res.data.success) {
                      navigate('/')
@@ -131,13 +162,25 @@ const AtdContextState = ({ children }) => {
 
 
              } catch (err) {
-                 alert(err.response.data.msg)
+                 toast.error(err.response.data.msg)
 
              }
          }
 
 
-     }
+    }
+    //for login to continue
+    const [loginTo,setLoginTo] = useState("")
+
+    //toggle button
+        const [toggle, setToggle] = useState(false);
+
+    
+  
+
+    
+    
+    
     let contextValue = {
         handleOnChange,
         handleSubmit,
@@ -150,7 +193,15 @@ const AtdContextState = ({ children }) => {
         atdData,
         setAtdData,
         tData,
-        setTData
+        setTData,
+        isLoading,
+        loginTo,
+        setLoginTo,
+        toggle,
+        setToggle,
+        userData,
+        setUserData
+        
     }
 
      return (

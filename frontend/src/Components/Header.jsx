@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { atdContext } from "../Context/AtdContext";
 
-const Header = ({ setOpen }) => {
+const Header = ({ setOpen,menuRef }) => {
+    // const {menuRef} = useContext(atdContext)
     const [timing, setTiming] = useState({
         date: '',
         year: '',
@@ -28,7 +30,7 @@ const Header = ({ setOpen }) => {
     }, [])
 
     return (
-        <div className='w-full  py-6 px-3 md:py-10 md:px-10  bg-white border-b border-gray-200 mb-6'>
+        <div className='w-full  py-6 px-3 md:py-10 md:px-10  bg-white border-b border-gray-200 mb-6' ref={menuRef}>
             {/* // <div className="w-full border "> */}
             <div className='max-w-7xl flex justify-between items-center flex-col gap-5 md:flex-row md:gap-0'>
                 {/* <div className="w-1/2 mx-auto"> */}
@@ -36,14 +38,17 @@ const Header = ({ setOpen }) => {
                     <h2 className='text-2xl md:text-[30px] font-bold font-sans text-gray-800'>
                         Attendance Dashboard
                     </h2>
+
                     <p className='font-semibold text-[16px] md:text-[19px] text-blue-600'>
                         {timing.year} {timing.month} {timing.date}, {timing.time}
                     </p>
+                  
                 </div>
                 <div>
-                    <button
-                        className='py-2.5 md:py-4 px-4 md:px-6 font-semibold cursor-pointer text-base md:text-[18px] rounded-[10px] border border-gray-300 transition-all active:scale-90 shadow hover:bg-gray-50'
+                    <button type="button"
                         onClick={() => setOpen(prev => !prev)}
+                        className='py-2.5 overflow-hidden inline-flex justify-center items-center md:py-4 px-4 md:px-6 font-semibold cursor-pointer transform-gpu text-base md:text-[18px] rounded-[10px] border border-gray-300 transition-all active:scale-90 shadow hover:bg-gray-50'
+                        
                     >
                         Add Previous Attendance
                     </button>
