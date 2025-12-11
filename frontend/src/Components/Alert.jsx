@@ -3,7 +3,7 @@ import { atdContext } from '../Context/AtdContext';
 
 const Username = ({name}) => {
 
-    const {setToggle,toggle} = useContext(atdContext)
+    const { setToggle, toggle } = useContext(atdContext)
    
 
     return (

@@ -4,30 +4,26 @@ import { Link, useNavigate } from "react-router-dom"
 import { atdContext } from '../Context/AtdContext';
 import Username from './Alert';
 const Navbar = ({menuRef}) => {
-    const [visible, setVisible] = useState(true);
     const navigate = useNavigate()
-    let scrollTimeout;
-    const { token, setToken,toggle,setToggle,userData,setUserData } = useContext(atdContext)
+    const { token, toggle, userData, setUserData, handleSubmit } = useContext(atdContext)
     const [loading, setLoading] = useState(false)
 
-    const [showOnScroll,setShowOnScroll] = useState(false)
    
     
 
     const handleLogout = async () => {
         setLoading(true)
-        console.log("logout");
-        
         await new Promise((resolve) => setTimeout(resolve, 1000))
-
         localStorage.removeItem("Token")
         setLoading(false)
         window.location.href = "/login"
 
     }
     useEffect(() => {
+        
+        if(userData)
         setUserData(userData)
-    },[userData])
+    }, [userData])
 
   
    

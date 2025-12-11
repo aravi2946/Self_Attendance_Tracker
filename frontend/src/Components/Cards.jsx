@@ -23,9 +23,10 @@ const Cards = ({menuRef}) => {
         tData } = useContext(atdContext)
    
     const [open,setOpen] = useState(false)
-  
+   const [isLoading,setIsLoading] = useState(false)
     const resetBtn = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         try {
             let tokenVal = localStorage.getItem('Token')
             
@@ -33,7 +34,7 @@ const Cards = ({menuRef}) => {
             // if (!confirm) return;
 
             const res = await axios.put(`${url}/api/atd/reset`, {}, { headers: { token: tokenVal } })
-
+            setIsLoading(false)
             if (res.atdData.success) {
                 fetchData(tokenVal)
                 fetchTodaysData(tokenVal)
@@ -45,6 +46,7 @@ const Cards = ({menuRef}) => {
 
         } finally {
             setOpen(false)
+            setIsLoading(false)
         }
     }
 
@@ -108,7 +110,7 @@ const Cards = ({menuRef}) => {
                                 <AlertDialogFooter>
                                     <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
                                     <AlertDialogAction className="cursor-pointer" onClick={resetBtn}>
-                                        Continue
+                                        {isLoading?"Continuing...":"Continue"}
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>

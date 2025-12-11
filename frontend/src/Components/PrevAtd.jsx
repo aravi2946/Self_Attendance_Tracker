@@ -4,7 +4,8 @@ import { atdContext } from '../Context/AtdContext'
 import { useNavigate } from 'react-router-dom'
 
 const PrevAtd = ({ setOpen }) => {
-    const { url } = useContext(atdContext)
+    const { url,fetchData } = useContext(atdContext)
+    const [loading,setLoading] = useState(false)
     const [data, setData] = useState({
         periods: '',
         presents:''
@@ -17,17 +18,18 @@ const PrevAtd = ({ setOpen }) => {
     const handleSaveBtn = async(e) => {
         e.preventDefault();
         let tokenVal = localStorage.getItem('Token')
-
+        setLoading(true)
         try {
-            const res = await axios.post(`${url}/api/atd/add-prev`,{presents:data.presents,periods:data.periods},{headers:{token:tokenVal}})
+            const res = await axios.post(`${url}/api/atd/add-prev`, { presents: data.presents, periods: data.periods }, { headers: { token: tokenVal } })
+            setLoading(false)
             if (res.status == 200) {
                 setOpen(false)
-                window.location.reload()
+                await fetchData()
                 
            }
             
         } catch (err) {
-
+            setLoading(false)
             console.log(err.response.data);
             
         }
@@ -40,19 +42,20 @@ const PrevAtd = ({ setOpen }) => {
           <div className='w-screen border border-gray-300 rounded-lg mt-10 mx-10 py-6 px-6 md:py-8 md:px-8 bg-white md:w-[500px] md:mx-auto '>
               <form onSubmit={handleSaveBtn} className='flex flex-col gap-4 md:gap-6'>
                   <div className='flex flex-col gap-6 md:gap-8'>
-                      <input type="text" placeholder='No.of Periods eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px]' name='periods' value={data.periods} onChange={onChangeHandle} required/>
-                      <input type="text" placeholder='No.of Presents eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px]' name='presents' value={data.presents} onChange={onChangeHandle} required/>
+                      <input type="text" placeholder='No.of Periods eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2' name='periods' value={data.periods} onChange={onChangeHandle} required/>
+                      <input type="text" placeholder='No.of Presents eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2 outline-none' name='presents' value={data.presents} onChange={onChangeHandle} required/>
                   </div>
                   <div className='flex gap-5 pt-3'>
                       <button className='cursor-pointer py-2 px-3 rounded-[10px] bg-red-400 text-white
                             font-semibold
                              md:py-2 md:px-4.5 active:scale-90 hover:bg-red-500 transition-all md:text-[18px] shadow-2xl' onClick={() => setOpen(false)}>Cancel</button>
+                      
                       <button type='submit' className='cursor-pointer py-2 px-5 rounded-[10px] bg-blue-400 text-white
                             font-semibold
                              md:py-2 md:px-7 active:scale-90 hover:bg-blue-500 transition-all md:text-[18px] shadow-2xl'
                          
                       >
-                          Save</button>
+                          {loading?"Saving...":"Save"}</button>
                   </div>
               </form>
           </div>

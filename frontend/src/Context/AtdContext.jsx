@@ -64,11 +64,11 @@ const AtdContextState = ({ children }) => {
         let date = new Date()
 
         try {
-            let Date = date.toISOString().slice(0, 10)
-            const res = await axios.post(`${url}/api/atd/today`, { date: Date }, { headers: { token: tokenVal } })
+            let todaysDate = date.toISOString().slice(0, 10)
+            const res = await axios.post(`${url}/api/atd/today`, { date: todaysDate }, { headers: { token: tokenVal } })
 
             todays = res.data.dailydata;
-            const result = ((todays?.presents / todays?.periods) * 100).toFixed(2)
+            const result = Number(((todays?.presents / todays?.periods) * 100).toFixed(2))
             if (result > 0) {
 
                 todays["result"] = result;
@@ -107,6 +107,7 @@ const AtdContextState = ({ children }) => {
             fetchData(tokenVal)
             fetchTodaysData(tokenVal)
             DecodeToken(tokenVal)
+            
         }
         else
           setToken("")
@@ -129,7 +130,7 @@ const AtdContextState = ({ children }) => {
                  
                  setIsLoading(false)
                  toast.success(res.data.msg)
-                 console.log(res.data.msg);
+                
                  setInterval(() => {
                      
                      if (res.data.success) {
@@ -137,6 +138,7 @@ const AtdContextState = ({ children }) => {
                      }
                  },1000)
                  let tokenVal = res.data.token;
+                 DecodeToken(tokenVal)
                  setToken(tokenVal)
                  localStorage.setItem('Token',tokenVal)
     

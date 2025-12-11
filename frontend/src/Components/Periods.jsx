@@ -9,16 +9,23 @@ const Periods = () => {
     fetchTodaysData } = useContext(atdContext)
   const [btnstatus, setBtnStatus] = useState({})
   const [periodBtn, setPeriodBtn] = useState({})
-  
+  const [preLoading, setPreLoading] = useState(null)
+  const [abLoading,setAbLoading] = useState(null)
 
 
   const periodBtnFun = async (id, status) => {
-
+     if(status)
+      setPreLoading(id)
+     else
+      setAbLoading(id)
+    
+    
     let date = new Date();
     try {
       let tokenVal = localStorage.getItem('Token')
       let Date = date.toISOString().slice(0, 10)
       const res = await axios.post(`${url}/api/atd/add`, { date: Date, isPresent: status, btnId: id }, { headers: { token: tokenVal } })
+      
 
 
       if (res.data.success) {
@@ -28,7 +35,7 @@ const Periods = () => {
           await fetchBtnStatus()
 
         }
-        loadData()
+        await loadData()
 
       }
 
@@ -37,7 +44,11 @@ const Periods = () => {
 
     } catch (err) {
       alert(err.response.data.msg);
+      
 
+    } finally {
+      setPreLoading(null)
+      setAbLoading(null)
     }
 
 
@@ -47,6 +58,7 @@ const Periods = () => {
   const fetchBtnStatus = async () => {
     let tokenVal = localStorage.getItem("Token")
     let date = new Date();
+    
     try {
       let Date = date.toISOString().slice(0, 10)
       const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
@@ -65,7 +77,7 @@ const Periods = () => {
   useEffect(() => {
 
     fetchBtnStatus()
-  }, [periodBtnFun])
+  }, [])
 
   return (
     <div className='pb-2 sm:w-full  my-10 '>
@@ -86,10 +98,22 @@ const Periods = () => {
 
 
                 <div className='flex flex-row gap-4 justify-center my-2'>
-                  <button className='py-1.5 px-6 rounded-lg bg-green-400 text-white font-semibold shadow cursor-pointer hover:bg-green-500 transition-all active:scale-90'
-                    onClick={() => periodBtnFun(val.id, true)}>{btnstatus[val.id] == 1 ? "Present ✅" : "Present"}</button>
-                  <button className='py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer hover:bg-red-600 transition-all active:scale-90'
-                    onClick={() => periodBtnFun(val.id, false)}>{btnstatus[val.id] == 2 ? "Absent ❌" : "Absent"}</button>
+                  <button className={`py-1.5 px-6 rounded-lg bg-green-400 text-white font-semibold shadow cursor-pointer hover:bg-green-500 transition-all active:scale-90`}
+                    onClick={() => periodBtnFun(val.id, true)} >
+                    {preLoading === val.id ? (<Loader />) :
+                      btnstatus[val.id] == 1 ?
+                        ("Present ✅"):("Present")
+                    }
+                  </button>
+                  <button className={`py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer" hover:bg-red-600 transition-all active:scale-90`}
+                    onClick={() => periodBtnFun(val.id, false)} >
+                    
+                    {
+                      abLoading == val.id ? (<Loader />) :
+                        btnstatus[val.id] == 2?("Absent ❌"):("Absent")
+                    }
+                  
+                  </button>
 
                 </div>
 
@@ -111,99 +135,17 @@ const Periods = () => {
   )
 }
 
+
+function Loader() {
+  return (
+    <div className='w-5 h-5 rounded-full border border-t-white animate-spin'>
+
+    </div>
+
+  )
+}
+
 export default Periods
 
 
-// import React, { useState, useEffect, useContext } from 'react'
-// import Data from "./../cardData.json"
-// import axios from 'axios'
-// import { atdContext } from '../Context/AtdContext'
 
-// const Periods = () => {
-//   const { url } = useContext(atdContext)
-//   const [btnstatus, setBtnStatus] = useState({})   // ✅ make it an object, not array
-
-//   const periodBtnFun = async (id, status) => {
-//     let date = new Date();
-//     try {
-//       let tokenVal = localStorage.getItem('Token')
-//       let Date = date.toISOString().slice(0, 10)
-//       const res = await axios.post(
-//         `${url}/api/atd/add`,
-//         { date: Date, isPresent: status, btnId: id },
-//         { headers: { token: tokenVal } }
-//       )
-//       console.log(res.data);
-
-//       if (res.data.success) {
-//         fetchBtnStatus()   // ✅ refresh state instead of reloading page
-//       } else {
-//         alert(res.data.msg);
-//       }
-//     } catch (err) {
-//       alert(err.response?.data?.msg || "Something went wrong");
-//     }
-//   }
-
-//   const fetchBtnStatus = async () => {
-//     let tokenVal = localStorage.getItem("Token")
-//     let date = new Date();
-//     try {
-//       let Date = date.toISOString().slice(0, 10)
-//       const res = await axios.post(
-//         `${url}/api/atd/status`,
-//         { date: Date },
-//         { headers: { token: tokenVal } }
-//       )
-//       let Status = res.data.status;
-//       console.log(Status);
-
-//       setBtnStatus(Status || {})   // ✅ safe fallback
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }
-
-//   useEffect(() => {
-//     fetchBtnStatus()
-//   }, [])
-
-//   return (
-//     <div className='pb-2'>
-//       <div className='flex flex-col gap-2 mx-3 md:mx-30'>
-//         <div className='my-5'>
-//           <h2 className='text-2xl font-semibold font-sans'>Today's Attendance</h2>
-//         </div>
-
-//         <div className='flex flex-col gap-4 px-3 py-2 text-center md:flex-row md:gap-5 md:flex-wrap'>
-//           {Data.map((val, index) => (
-//             <div
-//               key={index}
-//               className='border shadow border-gray-200 py-4 px-2.5 w-100 rounded-lg mx-auto flex flex-col gap-3'
-//             >
-//               <h2 className='text-[20px] md:text-2xl font-semibold'>{val.period}</h2>
-//               <p className='text-[16px] font-semibold text-gray-700'>{val.timing}</p>
-
-//               <div className='flex flex-row gap-4 justify-center my-2'>
-//                 <button
-//                   className='py-1.5 px-6 rounded-lg bg-green-500 text-white font-semibold shadow cursor-pointer hover:bg-green-600 transition-all active:scale-90'
-//                   onClick={() => periodBtnFun(val.id, true)}
-//                 >
-//                   {btnstatus[val.id] === 1 ? "Present ✔️" : "Present"}
-//                 </button>
-//                 <button
-//                   className='py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer hover:bg-red-600 transition-all active:scale-90'
-//                   onClick={() => periodBtnFun(val.id, false)}
-//                 >
-//                   {btnstatus[val.id] === 2 ? "Absent ❌" : "Absent"}
-//                 </button>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Periods
