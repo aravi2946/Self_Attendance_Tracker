@@ -53,7 +53,7 @@ const AtdContextState = ({ children }) => {
             setAtdData(total)
 
         } catch (err) {
-            console.log(err);
+            // console.log(err);
 
         }
     }
@@ -77,7 +77,7 @@ const AtdContextState = ({ children }) => {
             setTData(todays)
 
         } catch (err) {
-            console.log(err);
+            console.log();
 
         }
     }
