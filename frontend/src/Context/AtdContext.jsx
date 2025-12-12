@@ -58,11 +58,11 @@ const AtdContextState = ({ children }) => {
         }
     }
 
-    let todays;
+    // let todays;
 
     const fetchTodaysData = async (tokenVal) => {
         let date = new Date()
-
+        let todays;
         try {
             let todaysDate = date.toISOString().slice(0, 10)
             const res = await axios.post(`${url}/api/atd/today`, { date: todaysDate }, { headers: { token: tokenVal } })
@@ -77,7 +77,7 @@ const AtdContextState = ({ children }) => {
             setTData(todays)
 
         } catch (err) {
-            console.log();
+            console.log(err.message||"Something went wrong");
 
         }
     }
@@ -131,7 +131,7 @@ const AtdContextState = ({ children }) => {
                  setIsLoading(false)
                  toast.success(res.data.msg)
                 
-                 setInterval(() => {
+                 setTimeout(() => {
                      
                      if (res.data.success) {
                          navigate('/')
@@ -156,9 +156,12 @@ const AtdContextState = ({ children }) => {
                  const res = await axios.post(newUrl, data)
                  toast.success(res.data.msg)
                  let tokenVal = res.data.token;
-                 if (res.data.success) {
-                     navigate('/')
-                 }
+                 setTimeout(() => {
+                     
+                     if (res.data.success) {
+                         navigate('/')
+                     }
+                 },1000)
                  setToken(tokenVal)
                  localStorage.setItem('Token', tokenVal)
 

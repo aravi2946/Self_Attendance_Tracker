@@ -42,8 +42,8 @@ const PrevAtd = ({ setOpen }) => {
           <div className='w-screen border border-gray-300 rounded-lg mt-10 mx-10 py-6 px-6 md:py-8 md:px-8 bg-white md:w-[500px] md:mx-auto '>
               <form onSubmit={handleSaveBtn} className='flex flex-col gap-4 md:gap-6'>
                   <div className='flex flex-col gap-6 md:gap-8'>
-                      <input type="text" placeholder='No.of Periods eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2' name='periods' value={data.periods} onChange={onChangeHandle} required/>
-                      <input type="text" placeholder='No.of Presents eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2 outline-none' name='presents' value={data.presents} onChange={onChangeHandle} required/>
+                      <input type="text" placeholder='No.of Periods eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2 placeholder:font-semibold placeholder:text-[14px]' name='periods' value={data.periods} onChange={onChangeHandle} required/>
+                      <input type="text" placeholder='No.of Presents eg.20' className='border border-gray-400 py-2 px-2 md:py-3.5 md:px-3.5 rounded-[5px] text-[14px] md:text-[16px] focus:border-2 outline-none placeholder:font-semibold placeholder:text-[14px]' name='presents' value={data.presents} onChange={onChangeHandle} required/>
                   </div>
                   <div className='flex gap-5 pt-3'>
                       <button className='cursor-pointer py-2 px-3 rounded-[10px] bg-red-400 text-white

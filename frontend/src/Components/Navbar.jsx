@@ -160,10 +160,10 @@ const Navbar = ({ menuRef }) => {
                     </div>
 
                     <div className='flex gap-3 items-center md:gap-4'>
-                        <div className='relative'>
+                        {/* <div className='relative'>
                             <FiBell aria-label='Notifications' className='w-7 h-7 md:w-8 md:h-8 cursor-pointer text-gray-500 hover:text-black' />
                             <p className='absolute -top-1 -right-1 bg-red-500 rounded-full text-sm text-white px-1.5'>1</p>
-                        </div>
+                        </div> */}
                         <div ref={triggerRef}> 
                             {token ? <Username name={userData?.name} /> : (
                                 <button
@@ -209,7 +209,7 @@ const Navbar = ({ menuRef }) => {
                         {/* Logout */}
                         <div className="px-4 py-4 hover:bg-gray-50 transition cursor-pointer" onClick={handleLogout}>
                             {loading ? "Loading..." : (
-                                <button className="cursor-pointer font-semibold text-sm md:text-base">Logout</button>
+                                <button className="cursor-pointer text-[16px] font-semibold text-sm md:text-[18px]">Logout</button>
                             )}
                         </div>
                     </div>

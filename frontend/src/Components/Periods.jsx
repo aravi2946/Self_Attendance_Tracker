@@ -8,7 +8,6 @@ const Periods = () => {
   const { url, fetchData,
     fetchTodaysData } = useContext(atdContext)
   const [btnstatus, setBtnStatus] = useState({})
-  const [periodBtn, setPeriodBtn] = useState({})
   const [preLoading, setPreLoading] = useState(null)
   const [abLoading,setAbLoading] = useState(null)
 
@@ -29,21 +28,31 @@ const Periods = () => {
 
 
       if (res.data.success) {
-        async function loadData() {
-          await fetchData(tokenVal)
-          await fetchTodaysData(tokenVal)
-          await fetchBtnStatus()
+        setBtnStatus(prev => ({ ...prev, [id]: status ? 1 : 2 }))
+        // async function loadData() {
+        //   await fetchData(tokenVal)
+        //   await fetchTodaysData(tokenVal)
+        //   await fetchBtnStatus()
 
-        }
-        await loadData()
+        // }
+        // await loadData()
+        Promise.all([
+          fetchData(tokenVal),
+          fetchTodaysData(tokenVal),
+          fetchBtnStatus()
+        ])
 
+      } else {
+        
+        alert(res?.data?.msg || "Something went wrong");
+        console.log(res?.data.msg);
+        
       }
-
-      if (!res.data.success)
-        alert(res.data.msg);
+ 
+     
 
     } catch (err) {
-      alert(err.response.data.msg);
+      alert(err?.response?.data.msg||"Something went wrong");
       
 
     } finally {
@@ -70,7 +79,7 @@ const Periods = () => {
       }
 
     } catch (err) {
-      console.log(err);
+      console.log("Something went wrong");
 
     }
   }
@@ -105,7 +114,7 @@ const Periods = () => {
                         ("Present ✅"):("Present")
                     }
                   </button>
-                  <button className={`py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer" hover:bg-red-600 transition-all active:scale-90`}
+                  <button className={`py-1.5 px-6 rounded-lg bg-red-500 text-white font-semibold shadow cursor-pointer hover:bg-red-600 transition-all active:scale-90`}
                     onClick={() => periodBtnFun(val.id, false)} >
                     
                     {
@@ -138,7 +147,7 @@ const Periods = () => {
 
 function Loader() {
   return (
-    <div className='w-5 h-5 rounded-full border border-t-white animate-spin'>
+    <div className='w-5 h-5 rounded-full border border-t-transparent animate-spin'>
 
     </div>
 

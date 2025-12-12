@@ -11,7 +11,8 @@ function App() {
     <div className="">
       <Routes>
         <Route path="/" element={<Home open={open} setOpen={setOpen} />} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={"Page Not Found" }/>
       </Routes>
     </div>
 
