@@ -10,11 +10,11 @@ export const atdContext = createContext(null)
 const AtdContextState = ({ children }) => {
     const [auth, setAuth] = useState("login")
     const [token, setToken] = useState('')
+    const [btnstatus, setBtnStatus] = useState({})
     const navigate = useNavigate()
   
 
-    // const url = "http://localhost:3000";
-    const url = "http://192.168.29.44:3000"
+    const url = "http://localhost:3000";
 
      const [data, setData] = useState({
          name: '',
@@ -53,7 +53,7 @@ const AtdContextState = ({ children }) => {
             setAtdData(total)
 
         } catch (err) {
-            // console.log(err);
+            console.log(err);
 
         }
     }
@@ -82,6 +82,26 @@ const AtdContextState = ({ children }) => {
         }
     }
 
+     const fetchBtnStatus = async () => {
+        let tokenVal = localStorage.getItem("Token")
+        let date = new Date();
+        
+        try {
+          let Date = date.toISOString().slice(0, 10)
+          const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
+          let Status = res?.data?.status;
+          if (Status) {
+            
+            let status = Object.assign({}, ...Status)
+            setBtnStatus(status)
+          }
+    
+        } catch (err) {
+          console.log("Something went wrong");
+    
+        }
+      }
+
 
     //decode the token
     const [userData, setUserData] = useState({
@@ -107,6 +127,7 @@ const AtdContextState = ({ children }) => {
             fetchData(tokenVal)
             fetchTodaysData(tokenVal)
             DecodeToken(tokenVal)
+            fetchBtnStatus()
             
         }
         else
@@ -205,7 +226,10 @@ const AtdContextState = ({ children }) => {
         toggle,
         setToggle,
         userData,
-        setUserData
+        setUserData,
+        fetchBtnStatus,
+        btnstatus,
+        setBtnStatus
         
     }
 

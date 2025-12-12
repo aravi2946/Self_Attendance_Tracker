@@ -6,8 +6,8 @@ import { atdContext } from '../Context/AtdContext'
 import { useEffect } from 'react'
 const Periods = () => {
   const { url, fetchData,
-    fetchTodaysData } = useContext(atdContext)
-  const [btnstatus, setBtnStatus] = useState({})
+    fetchTodaysData,fetchBtnStatus,btnstatus ,setBtnStatus} = useContext(atdContext)
+  // const [btnstatus, setBtnStatus] = useState({})
   const [preLoading, setPreLoading] = useState(null)
   const [abLoading,setAbLoading] = useState(null)
 
@@ -64,29 +64,29 @@ const Periods = () => {
 
   }
 
-  const fetchBtnStatus = async () => {
-    let tokenVal = localStorage.getItem("Token")
-    let date = new Date();
+  // const fetchBtnStatus = async () => {
+  //   let tokenVal = localStorage.getItem("Token")
+  //   let date = new Date();
     
-    try {
-      let Date = date.toISOString().slice(0, 10)
-      const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
-      let Status = res?.data?.status;
-      if (Status) {
+  //   try {
+  //     let Date = date.toISOString().slice(0, 10)
+  //     const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
+  //     let Status = res?.data?.status;
+  //     if (Status) {
         
-        let status = Object.assign({}, ...Status)
-        setBtnStatus(status)
-      }
+  //       let status = Object.assign({}, ...Status)
+  //       setBtnStatus(status)
+  //     }
 
-    } catch (err) {
-      console.log("Something went wrong");
+  //   } catch (err) {
+  //     console.log("Something went wrong");
 
-    }
-  }
-  useEffect(() => {
+  //   }
+  // }
+  // useEffect(() => {
 
-    fetchBtnStatus()
-  }, [])
+  //   fetchBtnStatus()
+  // }, [])
 
   return (
     <div className='pb-2 sm:w-full  my-10 '>

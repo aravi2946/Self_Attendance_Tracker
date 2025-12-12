@@ -4,7 +4,7 @@ import { atdContext } from '../Context/AtdContext'
 import { useNavigate } from 'react-router-dom'
 
 const PrevAtd = ({ setOpen }) => {
-    const { url,fetchData } = useContext(atdContext)
+    const { url, fetchData } = useContext(atdContext)
     const [loading,setLoading] = useState(false)
     const [data, setData] = useState({
         periods: '',

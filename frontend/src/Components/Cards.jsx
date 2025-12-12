@@ -12,7 +12,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
 
 const Cards = ({menuRef}) => {
 
@@ -20,7 +19,7 @@ const Cards = ({menuRef}) => {
         fetchData,
         fetchTodaysData,
         atdData,
-        tData } = useContext(atdContext)
+        tData, fetchBtnStatus } = useContext(atdContext)
    
     const [open,setOpen] = useState(false)
    const [isLoading,setIsLoading] = useState(false)
@@ -30,12 +29,12 @@ const Cards = ({menuRef}) => {
         try {
             let tokenVal = localStorage.getItem('Token')
             
-            // const confirm = window.confirm("Are you sure you want to reset attendance?")
-            // if (!confirm) return;
-
             const res = await axios.put(`${url}/api/atd/reset`, {}, { headers: { token: tokenVal } })
+          
+            
             setIsLoading(false)
-            if (res.atdData.success) {
+            if (res.data.success) {
+                fetchBtnStatus()
                 fetchData(tokenVal)
                 fetchTodaysData(tokenVal)
             }
@@ -71,7 +70,7 @@ const Cards = ({menuRef}) => {
             }
         }
         fetchAllData();
-    }, [resetBtn])
+    }, [])
     
 
 
