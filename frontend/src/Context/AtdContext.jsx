@@ -106,15 +106,17 @@ const AtdContextState = ({ children }) => {
     //decode the token
     const [userData, setUserData] = useState({
         name: "",
-        email: ""
+        email: "",
+        role:""
     })
     const DecodeToken = (token) => {
         const decode = jwtDecode(token)
         
         const name = decode.name
         const email = decode.email
+        const role = decode.role
         
-        setUserData({name,email})
+        setUserData({name,email,role})
  
     }
    

@@ -52,6 +52,11 @@ const Navbar = ({ menuRef }) => {
                             <FiBell aria-label='Notifications' className='w-7 h-7 md:w-8 md:h-8 cursor-pointer text-gray-500 hover:text-black' />
                             <p className='absolute -top-1 -right-1 bg-red-500 rounded-full text-sm text-white px-1.5'>1</p>
                         </div> */}
+
+                        {userData.role=="admin"&&<div>
+                            <Link to="/usersList" className='border py-2 px-3 rounded-lg cursor-pointer shadow' >All Users</Link>
+                        </div>}
+
                         <div ref={triggerRef}> 
                             {token ? <Username name={userData?.name} /> : (
                                 <button

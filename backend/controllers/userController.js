@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken"
 import sendEmail from "../NodeMailer/Mail.js";
 
 
-const createToken = (id,name,email) => {
-    return jwt.sign({ id, name,email }, process.env.JWT_SECRET,{expiresIn:'7d'})
+const createToken = (id,name,email,role) => {
+    return jwt.sign({ id, name,email,role }, process.env.JWT_SECRET,{expiresIn:'7d'})
 }
 
 const registerController = async (req, res) => {
@@ -29,7 +29,7 @@ const registerController = async (req, res) => {
         await sendEmail(newUser.email, newUser.name)
         //session
        
-        const token = createToken(newUser._id, newUser.name,newUser.email)
+        const token = createToken(newUser._id, newUser.name,newUser.email,newUser.role)
         
         res.status(200).json({success:true,msg:"Registered Successfully",token})
 
@@ -59,7 +59,7 @@ const loginController = async (req, res) => {
        
         //session
        
-        const token = createToken(user._id,user.name,user.email)
+        const token = createToken(user._id,user.name,user.email,user.role)
 
         res.status(200).json({success:true,msg:"Login Success",token})
 

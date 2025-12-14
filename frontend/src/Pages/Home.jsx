@@ -7,6 +7,7 @@ import Header from '../Components/Header'
 import { motion } from "framer-motion"
 import { atdContext } from '../Context/AtdContext'
 
+
 const Home = ({ open, setOpen }) => {
 const {setToggle,toggle} = useContext(atdContext)
 
@@ -31,6 +32,7 @@ const {setToggle,toggle} = useContext(atdContext)
           <Periods  />
         </div>
       </motion.div>
+      
     </div>
   )
 }
