@@ -1,24 +1,45 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Search, Trash2, UserCheck, UserX, ChevronDown, Filter, Download, ArrowLeft } from 'lucide-react';
+import axios from 'axios';
+import { atdContext } from '../Context/AtdContext';
 
 const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  // const [filterStatus, setFilterStatus] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const { url } = useContext(atdContext)
+  const [users,setUsers]  = useState([])
+  //fetching the data
+  const fetchAllUsers = async () => {
+    try {
+      const allUsers = await axios.get(`${url}/api/admin/usersList`)
+      
+      setUsers(allUsers.data)
+      // console.log(allUsers)
+      // console.log(allUsers?.data?.length);
 
+      
+    } catch (err) {
+      console.log("err");
+      
+    }
+  }
+  useEffect(() => {
+    fetchAllUsers()
+  },[])
   // Mock data - replace with actual API call
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Rajesh Kumar', email: 'rajesh.k@company.com', attendance: 92.5, status: 'active', lastActive: '2 hours ago' },
-    { id: 2, name: 'Priya Sharma', email: 'priya.sharma@company.com', attendance: 88.3, status: 'active', lastActive: '1 day ago' },
-    { id: 3, name: 'Amit Patel', email: 'amit.p@company.com', attendance: 67.8, status: 'warning', lastActive: '3 days ago' },
-    { id: 4, name: 'Sneha Reddy', email: 'sneha.reddy@company.com', attendance: 95.2, status: 'active', lastActive: '5 hours ago' },
-    { id: 5, name: 'Vikram Singh', email: 'vikram.s@company.com', attendance: 45.6, status: 'critical', lastActive: '1 week ago' },
-    { id: 6, name: 'Ananya Iyer', email: 'ananya.iyer@company.com', attendance: 91.7, status: 'active', lastActive: '30 mins ago' },
-    { id: 7, name: 'Rohan Gupta', email: 'rohan.g@company.com', attendance: 73.4, status: 'warning', lastActive: '2 days ago' },
-    { id: 8, name: 'Deepika Nair', email: 'deepika.n@company.com', attendance: 89.9, status: 'active', lastActive: '4 hours ago' },
-  ]);
+  // const [users, setUsers] = useState([
+  //   { id: 1, name: 'Rajesh Kumar', email: 'rajesh.k@company.com', attendance: 92.5, status: 'active', lastActive: '2 hours ago' },
+  //   { id: 2, name: 'Priya Sharma', email: 'priya.sharma@company.com', attendance: 88.3, status: 'active', lastActive: '1 day ago' },
+  //   { id: 3, name: 'Amit Patel', email: 'amit.p@company.com', attendance: 67.8, status: 'warning', lastActive: '3 days ago' },
+  //   { id: 4, name: 'Sneha Reddy', email: 'sneha.reddy@company.com', attendance: 95.2, status: 'active', lastActive: '5 hours ago' },
+  //   { id: 5, name: 'Vikram Singh', email: 'vikram.s@company.com', attendance: 45.6, status: 'critical', lastActive: '1 week ago' },
+  //   { id: 6, name: 'Ananya Iyer', email: 'ananya.iyer@company.com', attendance: 91.7, status: 'active', lastActive: '30 mins ago' },
+  //   { id: 7, name: 'Rohan Gupta', email: 'rohan.g@company.com', attendance: 73.4, status: 'warning', lastActive: '2 days ago' },
+  //   { id: 8, name: 'Deepika Nair', email: 'deepika.n@company.com', attendance: 89.9, status: 'active', lastActive: '4 hours ago' },
+  // ]);
 
   const getAttendanceColor = (percentage) => {
     if (percentage >= 90) return 'text-green-600 bg-green-50';
@@ -49,28 +70,29 @@ const UsersList = () => {
 
   
 
-  const filteredUsers = users
-    .filter(user => {
-      const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesFilter = filterStatus === 'all' || user.status === filterStatus;
-      return matchesSearch && matchesFilter;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
-      if (sortBy === 'attendance') return b.attendance - a.attendance;
-      if (sortBy === 'email') return a.email.localeCompare(b.email);
-      return 0;
-    });
+  // const filteredUsers = users
+  //   .filter(user => {
+  //     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       user.email.toLowerCase().includes(searchTerm.toLowerCase());
+  //     const matchesFilter = filterStatus === 'all' || user.status === filterStatus;
+  //     return matchesSearch && matchesFilter;
+  //   })
+  //   .sort((a, b) => {
+  //     if (sortBy === 'name') return a.name.localeCompare(b.name);
+  //     if (sortBy === 'attendance') return b.attendance - a.attendance;
+  //     if (sortBy === 'email') return a.email.localeCompare(b.email);
+  //     return 0;
+  //   });
 
-  const stats = {
-    total: users.length,
-    active: users.filter(u => u.status === 'active').length,
-    avgAttendance: (users.reduce((sum, u) => sum + u.attendance, 0) / users.length).toFixed(1)
-  };
+  // const stats = {
+  //   total: users.length,
+  //   active: users.filter(u => u.status === 'active').length,
+  //   avgAttendance: (users.reduce((sum, u) => sum + u.attendance, 0) / users.length).toFixed(1)
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <title>Admin Dashboard</title>
       <div className="max-w-7xl mx-auto">
         {/* Header with Back Button and Title */}
         <div className="mb-8">
@@ -98,7 +120,8 @@ const UsersList = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                {/* <p className="text-2xl font-bold text-gray-900">{stats.total}</p> */}
+                <p className="text-2xl font-bold text-gray-900">{users?.length}</p>
               </div>
               <UserCheck className="w-10 h-10 text-blue-500" />
             </div>
@@ -107,7 +130,7 @@ const UsersList = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Active Users</p>
-                <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+                {/* <p className="text-2xl font-bold text-green-600">{stats.active}</p> */}
               </div>
               <UserCheck className="w-10 h-10 text-green-500" />
             </div>
@@ -116,7 +139,7 @@ const UsersList = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Avg Attendance</p>
-                <p className="text-2xl font-bold text-purple-600">{stats.avgAttendance}%</p>
+                {/* <p className="text-2xl font-bold text-purple-600">{stats.avgAttendance}%</p> */}
               </div>
               <UserCheck className="w-10 h-10 text-purple-500" />
             </div>
@@ -141,7 +164,7 @@ const UsersList = () => {
             {/* Filter */}
             <div className="flex gap-2">
               <select
-                value={filterStatus}
+                // value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white"
               >
@@ -181,42 +204,43 @@ const UsersList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
+                {/* filteredUsers */}
+                {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-                          {user.name.split(' ').map(n => n[0]).join('')}
+                          {user?.name.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                          <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <p className="text-sm text-gray-600">{user?.email}</p>
                     </td>
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(user.status)}`}>
                         {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                       </span>
-                    </td>
+                    </td> */}
                     <td className="px-6 py-4">
                       <div className="flex flex-col items-center">
-                        <span className={`text-lg font-bold ${getAttendanceColor(user.attendance)}`}>
-                          {user.attendance}%
-                        </span>
+                        {/* <span className={`text-lg font-bold ${getAttendanceColor(user.re)}`}> */}
+                          {user?.result||0}%
+                        {/* </span> */}
                         <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                           <div
-                            className={`h-2 rounded-full ${user.attendance >= 75 ? 'bg-green-500' : user.attendance >= 60 ? 'bg-orange-500' : 'bg-red-500'}`}
-                            style={{ width: `${user.attendance}%` }}
+                            className={`h-2 rounded-full ${user.result >= 75 ? 'bg-green-500' : user.result >= 60 ? 'bg-orange-500' : 'bg-red-500'}`}
+                            style={{ width: `${user.result}%` }}
                           />
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <p className="text-sm text-gray-600">{user.lastActive}</p>
-                    </td>
+                    </td> */}
                     <td className="px-6 py-4">
                       <div className="flex justify-center">
                         <button
@@ -236,7 +260,7 @@ const UsersList = () => {
         </div>
 
         {/* Mobile Cards */}
-        <div className="lg:hidden space-y-4">
+        {/* <div className="lg:hidden space-y-4">
           {filteredUsers.map((user) => (
             <div key={user.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex items-start justify-between mb-3">
@@ -287,15 +311,15 @@ const UsersList = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
-        {filteredUsers.length === 0 && (
+        {/* {filteredUsers.length === 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <UserX className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
             <p className="text-gray-600">Try adjusting your search or filter criteria</p>
           </div>
-        )}
+        )} */}
 
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
