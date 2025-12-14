@@ -12,6 +12,7 @@ const Login = () => {
 
     return (
         <div className="h-screen flex flex-col gap-5 justify-center items-center bg-gray-100 px-5 ">
+            <title>{ auth=="login"?"Login-page":"Signup-page"}</title>
             {/* Container */}
             <Toaster richColors position="top-center" />
             <div className="">
