@@ -16,11 +16,11 @@ const Navbar = ({ menuRef }) => {
         await new Promise((resolve) => setTimeout(resolve, 1000))
         localStorage.removeItem("Token")
         setLoading(false)
-        window.location.href = "/login"
+        window.location.href = "/"
     }
 
     useEffect(() => {
-        
+
         if (userData) setUserData(userData)
     }, [userData])
 
