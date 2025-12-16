@@ -22,10 +22,7 @@ const usersAdminController = async (req, res) => {
             })
         
         res.json(combined)
-        // res.json(list1)
-        // console.log(list1);
-
-        // return res.json({list:usersList,length:usersList.length})
+        
 
 
     } catch (err) {
