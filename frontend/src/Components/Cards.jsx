@@ -11,7 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog.jsx"
+} from "@/components/ui/alert-dialog"
 
 const Cards = ({menuRef}) => {
 
