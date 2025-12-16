@@ -5,6 +5,7 @@ import userRouter from "./routes/userRoutes.js";
 import atdRoutes from "./routes/atdRoutes.js";
 import cors from "cors"
 import adminRoutes from "./routes/adminRoutes.js";
+import morgan from "morgan";
 const app = express();
 
 
@@ -14,7 +15,8 @@ app.use(express.json())
 app.use(cors())
 app.use('/api/user', userRouter)
 app.use('/api/atd', atdRoutes)
-app.use('/api/admin',adminRoutes)
+app.use('/api/admin', adminRoutes)
+app.use(morgan('dev'))
 //database
 connectToDB();
 
