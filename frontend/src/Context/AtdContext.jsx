@@ -184,12 +184,14 @@ const AtdContextState = ({ children }) => {
                      if (res.data.success) {
                          navigate('/')
                      }
-                 },1000)
+                 }, 1000)
+                 DecodeToken(tokenVal)
                  setToken(tokenVal)
                  localStorage.setItem('Token', tokenVal)
 
 
              } catch (err) {
+                 setIsLoading(false)
                  toast.error(err.response.data.msg)
 
              }

@@ -20,6 +20,7 @@ const Navbar = ({ menuRef }) => {
     }
 
     useEffect(() => {
+        
         if (userData) setUserData(userData)
     }, [userData])
 

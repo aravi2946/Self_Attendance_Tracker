@@ -279,7 +279,7 @@ const UsersList = () => {
 
                 <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                   <span className="text-sm text-gray-600">Last Active</span>
-                  <span className="text-sm text-gray-900">{getTimeAgo(user?.updatedAt)}</span>
+                  <span className="text-sm text-gray-900">{getTimeAgo(user?.updatedAt) }</span>
                 </div>
               </div>
             </div>
