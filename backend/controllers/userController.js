@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import userModel from "../models/userSchema.js";
 import jwt from "jsonwebtoken"
-import sendEmail from "../NodeMailer/Mail.js";
+
 
 
 const createToken = (id,name,email,role) => {
@@ -40,8 +40,7 @@ const registerController = async (req, res) => {
         })
 
         await newUser.save();
-        await sendEmail(newUser.email, newUser.name)
-        //session
+       
        
         const token = createToken(newUser._id, newUser.name,newUser.email,newUser.role)
         
