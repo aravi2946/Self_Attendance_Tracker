@@ -1,12 +1,10 @@
-import { useContext } from "react"
 import { Navigate } from "react-router-dom"
-import { atdContext } from "../Context/AtdContext"
 import { jwtDecode } from "jwt-decode"
 
 
 
 const AdminRoute = ({ children }) => {
-    //  const {userData} = useContext(atdContext)
+  
     let token  = localStorage.getItem("Token")
     let userData = jwtDecode(token)
     

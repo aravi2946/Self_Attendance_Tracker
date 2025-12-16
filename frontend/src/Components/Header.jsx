@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react";
-import { atdContext } from "../Context/AtdContext";
+import {  useEffect, useState } from "react";
 
 const Header = ({ setOpen,menuRef }) => {
-    // const {menuRef} = useContext(atdContext)
     const [timing, setTiming] = useState({
         date: '',
         year: '',

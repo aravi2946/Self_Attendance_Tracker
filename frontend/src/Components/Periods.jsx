@@ -3,11 +3,9 @@ import Data from "./../cardData.json"
 import axios from 'axios'
 import { useContext } from 'react'
 import { atdContext } from '../Context/AtdContext'
-import { useEffect } from 'react'
 const Periods = () => {
   const { url, fetchData,
     fetchTodaysData,fetchBtnStatus,btnstatus ,setBtnStatus} = useContext(atdContext)
-  // const [btnstatus, setBtnStatus] = useState({})
   const [preLoading, setPreLoading] = useState(null)
   const [abLoading,setAbLoading] = useState(null)
 
@@ -29,13 +27,7 @@ const Periods = () => {
 
       if (res.data.success) {
         setBtnStatus(prev => ({ ...prev, [id]: status ? 1 : 2 }))
-        // async function loadData() {
-        //   await fetchData(tokenVal)
-        //   await fetchTodaysData(tokenVal)
-        //   await fetchBtnStatus()
-
-        // }
-        // await loadData()
+        
         Promise.all([
           fetchData(tokenVal),
           fetchTodaysData(tokenVal),
@@ -64,29 +56,7 @@ const Periods = () => {
 
   }
 
-  // const fetchBtnStatus = async () => {
-  //   let tokenVal = localStorage.getItem("Token")
-  //   let date = new Date();
-    
-  //   try {
-  //     let Date = date.toISOString().slice(0, 10)
-  //     const res = await axios.post(`${url}/api/atd/status`, { date: Date }, { headers: { token: tokenVal } })
-  //     let Status = res?.data?.status;
-  //     if (Status) {
-        
-  //       let status = Object.assign({}, ...Status)
-  //       setBtnStatus(status)
-  //     }
-
-  //   } catch (err) {
-  //     console.log("Something went wrong");
-
-  //   }
-  // }
-  // useEffect(() => {
-
-  //   fetchBtnStatus()
-  // }, [])
+ 
 
   return (
     <div className='pb-2 sm:w-full  my-10 '>
