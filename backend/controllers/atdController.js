@@ -110,8 +110,6 @@ const atdController = async (req, res) => {
     }
 };
 
-
-
 //adds previous attendance data
 const addPreviousDataController = async (req, res) => {
     let { periods, presents } = req.body;

@@ -7,6 +7,11 @@ import sendEmail from "../NodeMailer/Mail.js";
 const createToken = (id,name,email,role) => {
     return jwt.sign({ id, name,email,role }, process.env.JWT_SECRET,{expiresIn:'7d'})
 }
+const commonDomains = ["gmail.com", "yahoo.com", "outlook.com"];
+function validateDomain(email) {
+    const domain = email.split("@")[1];
+    return commonDomains.includes(domain);
+}
 
 const registerController = async (req, res) => {
     const { name, email, password } = req.body;
@@ -14,10 +19,19 @@ const registerController = async (req, res) => {
     try {
         const normalizedEmail = email.toLowerCase();
         const isEmail = await userModel.findOne({ email })
-        if (isEmail) {
-            return res.status(409).json({ success: false, msg: "Email is Already registered" })
+     
+        
+        if (!validateDomain(email)) {
+            return res.status(404).json({success:false,msg:'Invalid Email'})
         }
-
+        if (isEmail) {
+            return res.status(404).json({ success: false, msg: "Email is Already registered" })
+        }
+       
+        if (!(password.length> 8)) {
+            return res.status(404).json({success:false,msg:"Password must be greater than 8 characters"})
+        }
+       
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = new userModel({
             name,
