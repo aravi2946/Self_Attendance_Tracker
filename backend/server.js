@@ -23,8 +23,8 @@ connectToDB();
 
 
 const port = process.env.PORT || 3000;
-app.get('/', () => {
-    res.send("Welcome")
+app.get('/', (req,res) => {
+    res.send("welcome")
 })
 app.listen(port, () => {
     console.log(`Server running at ${port}`);
