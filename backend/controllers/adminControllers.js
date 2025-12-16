@@ -12,6 +12,7 @@ const usersAdminController = async (req, res) => {
             const combined = list.map(user => {
                 const match = list1.find(a => String(a.userId) === String(user._id))
                 return {
+                    id:user._id,
                     name: user.name,
                     email: user.email,
                     result: match?.result,
@@ -33,14 +34,25 @@ const usersAdminController = async (req, res) => {
     }
 }
 
-const usersAtdAdminController = async (req, res) => {
-    try {
-        res.json(allUsersAtd)
-    } catch (err) {
-        console.log("Error in usersAtdAdminController", err);
 
+const deleteAccController = async (req, res) => {
+    let { id } = req.params
+  
+    try{
+        let findUser = await userModel.findById(id )
+        if (!findUser) {
+            return res.status(404).json({success:false,msg:"User not found"})
+        }
+        
+        await userModel.findByIdAndDelete(id)
+        await atdModel.deleteMany({userId:id})
+        res.status(200).json({success:true,msg:'Account Deleted Successfully'})
+    } catch (err) {
+        console.log('error in deleteAccController');
+        res.status(500).json({msg:"Internal Server error"})
+        
     }
 }
 
 
-export { usersAdminController, usersAtdAdminController }
+export { usersAdminController, deleteAccController }

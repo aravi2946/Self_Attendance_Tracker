@@ -1,10 +1,10 @@
 import {Router} from "express"
-import { usersAdminController, usersAtdAdminController } from "../controllers/adminControllers.js"
+import { deleteAccController, usersAdminController } from "../controllers/adminControllers.js"
 
 
 const adminRoutes = Router()
 
 adminRoutes.get('/usersList', usersAdminController)
-adminRoutes.get('/usersAtdList',usersAtdAdminController)
+adminRoutes.delete('/deleteUser/:id',deleteAccController)
 
 export default adminRoutes;
